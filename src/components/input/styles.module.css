@@ -1,0 +1,35 @@
+.form_row {
+    position: relative;
+    margin-bottom: 40px;
+ }
+ .form_row input {
+    display: block;
+    width: 100%;
+    padding: 0 10px;
+    line-height: 40px;
+    background: none;
+    border-width: 0;
+    border-bottom: 2px solid #C0C0C0;
+    transition: all 0.2s ease;
+    width: 335px;
+ }
+ .form_row label {
+    position: absolute;
+    left: 13px;
+    color: #9d959d;
+    font-size: 20px;
+    font-weight: 300;
+    transform: translateY(-35px);
+    transition: all 0.2s ease;
+ }
+ .form_row input:focus {
+    outline: 0;
+
+ }
+ .form_row input:focus+label, .form_row input:valid+label {
+    transform: translateY(-60px);
+    margin-left: -5px;
+    font-size: 14px;
+    font-weight: 400;
+    outline: 0;
+ }
