@@ -5,38 +5,70 @@ import Button from "../../components/button/Button";
 import { close_eye, lock, open_eye } from "../../Images";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import BackToPrevBtn from "../../components/backToPrevBtn/BackToPrevBtn";
+import { postRegister } from "../../redux/slices/registerSlice";
 
 function RegisterPass() {
   const [pass, setPass] = useState(false);
   const [state, setState] = useState(true);
-  const [confirm, setConfirm] = useState(false)
+  const [confirm, setConfirm] = useState(false);
+  const navigate = useNavigate();
+
+  const showToErrMessage = (text) => {
+    toast.error(text, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
+  const showToSuccessMessage = (text) => {
+    toast.success(text, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
+  const SignupSchema = Yup.object().shape({
+    password: Yup.string()
+      .min(8, "")
+      .max(50, "")
+      .matches(/(?=.*[0-9])(?=.*[A-Z])/),
+    confirm_password: Yup.string().min(8, "").max(50, ""),
+  });
+
   const dispatch = useDispatch();
   const err = useSelector((state) => state.auth.error);
   //   console.log(err);
-  function toggleForPass() {
-    setPass(!pass);
-  }
+
   const formik = useFormik({
     initialValues: {
       password: "",
       confirm_password: "",
     },
-
+    validationSchema: SignupSchema,
     onSubmit: (values) => {
-        if(values.password===values.confirm_password){
-            let email = localStorage.getItem("email");
-            email = JSON.parse(email);
-            let data = { ...values, ...email };
-            console.log(data);
-            //   dispatch(postAuth(data));
-        }else{
-            setConfirm(true)
-        }
+      if (values.password === values.confirm_password) {
+        let email = localStorage.getItem("email");
+        email = JSON.parse(email);
+        let data = {
+          navigate,
+          data: { ...values, ...email },
+          showToSuccessMessage,
+        };
+        console.log(data);
+        dispatch(postRegister(data));
+      } else {
+        showToErrMessage("Пароли не совпадают");
+        setConfirm(true);
+      }
     },
   });
 
-  const navigate = useNavigate();
+  function toggleForPass() {
+    setPass(!pass);
+  }
 
   useEffect(() => {
     if (err === false) {
@@ -48,8 +80,16 @@ function RegisterPass() {
     setState(!state);
   };
 
+  formik.errors.password &&
+    formik.touched.confirm_password &&
+    showToErrMessage(
+      "Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число"
+    );
+
   return (
     <form onSubmit={formik.handleSubmit}>
+      <BackToPrevBtn to="/register/email" />
+      <ToastContainer />
       {state ? (
         <img src={close_eye} alt="" className={s.eye} onClick={toggle} />
       ) : (
@@ -72,7 +112,7 @@ function RegisterPass() {
           letteSpacing={state === false && "0px"}
           onChange={formik.handleChange}
           value={formik.values.password}
-          color={confirm&&"red"}
+          color={confirm && "red"}
         />
         {pass ? (
           <>
@@ -83,13 +123,32 @@ function RegisterPass() {
               name="confirm_password"
               onChange={formik.handleChange}
               value={formik.values.confirm_password}
-              color={confirm&&"red"}
+              color={confirm && "red"}
             />
-            {confirm&&<span style={{color:"red", fontSize:"15px", marginTop:"8px"}}>Пароли не совпадают</span>}
-            <Button text="Готово" margin="46px 0 0 0 " type="submit" />
+            {confirm && (
+              <span
+                style={{ color: "red", fontSize: "15px", marginTop: "8px" }}
+              >
+                Пароли не совпадают
+              </span>
+            )}
+            <Button
+              text="Готово"
+              margin="46px 0 0 0 "
+              type="submit"
+              disabled={
+                !(formik.values.password && formik.values.confirm_password)
+              }
+            />
           </>
         ) : (
-          <Button text="Далее" margin="86px 0 0 0 " onClick={toggleForPass} />
+          <Button
+            text="Далее"
+            margin="86px 0 0 0 "
+            onClick={toggleForPass}
+            // type="submit"
+            disabled={!formik.values.password}
+          />
         )}
       </div>
     </form>

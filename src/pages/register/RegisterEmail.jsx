@@ -6,28 +6,48 @@ import Button from "../../components/button/Button";
 import { useNavigate } from "react-router-dom";
 import { registerEmail } from "../../redux/slices/registerSlice";
 import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import BackToPrevBtn from "../../components/backToPrevBtn/BackToPrevBtn";
+
 function RegisterEmail() {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const formik = useFormik({
-        initialValues: {
-          username: "",
-          email: "",
-        },
-    
-        onSubmit: (values) => {
-          //   let data = { values, navigate };
-          dispatch(registerEmail(false));
-          localStorage.setItem("email", JSON.stringify(values))
-          console.log(values);
-          navigate('/register/password')
-        },
-      });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const showToastMessage = () => {
+    toast.error("Неверный логин или почта", {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
 
-      
+  const SignupSchema = Yup.object().shape({
+    username: Yup.string().min(2, "").max(50, ""),
+    email: Yup.string().email(""),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+    },
+    validationSchema: SignupSchema,
+    onSubmit: (values) => {
+      //   let data = { values, navigate };
+      dispatch(registerEmail(false));
+      localStorage.setItem("email", JSON.stringify(values));
+      console.log(values);
+      navigate("/register/password");
+    },
+  });
+
+  formik.errors.email && formik.touched.email && showToastMessage();
+
   return (
     <form onSubmit={formik.handleSubmit}>
+      <BackToPrevBtn to="/" />
+      <ToastContainer />
       <Input
         forLabel="username"
         id="username"
@@ -35,8 +55,8 @@ function RegisterEmail() {
         type="text"
         value={formik.values.username}
         onChange={formik.handleChange}
-        
       />
+
       <Input
         forLabel="email"
         id="email"

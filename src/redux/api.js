@@ -11,9 +11,16 @@ const fetchAPI = axios.create({
         Authorization: `Bearer ${access}`,
     },
 });
+
+const fetchNoTokenAPI = axios.create({
+    baseURL: "https://neobook.online/mobi-market/",
+    headers: {
+        "Content-type": "application/json",
+    },
+});
 export const requests = {
-    authApi:(data)=>fetchAPI.post("login/", data),
-    registerApi:(data)=>fetchAPI.post("login/", data),
+    authApi:(data)=>fetchNoTokenAPI.post("login/", data),
+    registerApi:(data)=>fetchNoTokenAPI.post("users/register/", data),
 
     // getUsers:(id)=>fetchAPI.get(`user-profile/${id}/`),
     // postGetAdress:(data)=>fetchAPI.post("citizen-address-info/", data),

@@ -4,7 +4,6 @@ import {requests} from "../api";
 
 const initialState = {
     error: false,
-    password:{}
 };
 
 export const registerEmail = createAsyncThunk(
@@ -20,12 +19,12 @@ export const postRegister = createAsyncThunk(
     'register/postRegister',
     async (data) => {
         // localStorage.removeItem('access')
-        const res = await requests.authApi(data.values);
+        const res = await requests.registerApi(data.data);
         localStorage.setItem("access", res.data.access)
         // console.log("access", res.data); 
-
-        data.navigate('/main/serviceOne')
-        localStorage.setItem('user_id', res.data.user_id)
+        data.navigate('/')
+        data.showToSuccessMessage("Успех!")
+        // localStorage.setItem('user_id', res.data.user_id)
 
         return res.data;
     }
@@ -51,12 +50,16 @@ const authSlice = createSlice({
             // console.log(action)
             state.error = true;
         },
-        // [registerEmail.fulfilled]: (state) => {
-        //     state.error = true;
-        // },
-        // [registerEmail.rejected]: (state) => {
-        //     state.error = true;
-        // },
+        [postRegister.pending]: (state, action) => {
+            console.log(action)
+            state.error = true;
+        },
+        [postRegister.fulfilled]: (state) => {
+            state.error = true;
+        },
+        [postRegister.rejected]: (state) => {
+            state.error = true;
+        },
     },
 });
 

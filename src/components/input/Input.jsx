@@ -11,12 +11,14 @@ const Input = ({
   forLabel,
   padding,
   id,
-  margin
+  margin,
+  bC,
+  color
 }) => {
   return (
     <div className={s.form_row}>
       <input
-        style={{ padding: padding, margin:margin }}
+        style={{ padding: padding, margin:margin, borderColor:bC, color:color }}
         className={s.input}
         placeholder={placeholder}
         value={value}

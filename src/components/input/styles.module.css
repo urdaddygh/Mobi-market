@@ -1,6 +1,5 @@
 .form_row {
     position: relative;
-    margin-bottom: 40px;
  }
  .form_row input {
     display: block;
@@ -15,11 +14,11 @@
  }
  .form_row label {
     position: absolute;
-    left: 13px;
+    left: 0px;
     color: #9d959d;
-    font-size: 20px;
+    /* font-size: 20px; */
     font-weight: 300;
-    transform: translateY(-35px);
+    transform: translateY(-30px);
     transition: all 0.2s ease;
  }
  .form_row input:focus {
