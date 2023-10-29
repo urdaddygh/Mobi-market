@@ -12,13 +12,12 @@ const Input = ({
   padding,
   id,
   margin,
-  bC,
   color
 }) => {
   return (
     <div className={s.form_row}>
       <input
-        style={{ padding: padding, margin:margin, borderColor:bC, color:color }}
+        style={{ padding: padding, margin:margin, borderColor:color, color:color }}
         className={s.input}
         placeholder={placeholder}
         value={value}

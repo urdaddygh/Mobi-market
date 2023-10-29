@@ -19,7 +19,8 @@ const fetchNoTokenAPI = axios.create({
     },
 });
 export const requests = {
-    authApi:(data)=>fetchNoTokenAPI.post("login/", data),
+    authApi:(data)=>fetchNoTokenAPI.post("users/login/", data),
+    forgotPassword:(data)=>fetchNoTokenAPI.post("users/forgot-password/", data),
     registerApi:(data)=>fetchNoTokenAPI.post("users/register/", data),
 
     // getUsers:(id)=>fetchAPI.get(`user-profile/${id}/`),

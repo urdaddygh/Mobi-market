@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../components/input/Input";
 import s from "./styles.module.css";
 import Button from "../../components/button/Button";
@@ -14,7 +14,8 @@ import BackToPrevBtn from "../../components/backToPrevBtn/BackToPrevBtn";
 function RegisterEmail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [state, setState] = useState(false)
+  
   const showToastMessage = () => {
     toast.error("Неверный логин или почта", {
       position: toast.POSITION.TOP_CENTER,
@@ -23,27 +24,32 @@ function RegisterEmail() {
   };
 
   const SignupSchema = Yup.object().shape({
-    username: Yup.string().min(2, "").max(50, ""),
-    email: Yup.string().email(""),
+    username: Yup.string().min(2).max(50).matches(/(?=.*[a-z])\w+/),
+    email: Yup.string().email(),
   });
 
   const formik = useFormik({
+    validateOnChange: false,
+    validateOnBlur: false,
     initialValues: {
       username: "",
       email: "",
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
-      //   let data = { values, navigate };
-      dispatch(registerEmail(false));
-      localStorage.setItem("email", JSON.stringify(values));
-      console.log(values);
-      navigate("/register/password");
+      // console.log(formik.errors.email);
+      // let data = { values, navigate };
+      if (formik.errors.email) {
+        console.log(formik.errors.email);
+        showToastMessage();
+      } else {
+        console.log(formik.errors);
+        dispatch(registerEmail(false));
+        localStorage.setItem("email", JSON.stringify(values));
+        navigate("/register/password");
+      }
     },
   });
-
-  formik.errors.email && formik.touched.email && showToastMessage();
-
   return (
     <form onSubmit={formik.handleSubmit}>
       <BackToPrevBtn to="/" />
@@ -55,8 +61,9 @@ function RegisterEmail() {
         type="text"
         value={formik.values.username}
         onChange={formik.handleChange}
+        color={formik.errors.username ? "red" : ""}
       />
-
+      {/* {formik.errors.email&&showToastMessage()} */}
       <Input
         forLabel="email"
         id="email"
@@ -65,6 +72,7 @@ function RegisterEmail() {
         value={formik.values.email}
         onChange={formik.handleChange}
         margin="47px 0 0 0"
+        color={formik.errors.email ? "red": ""}
       />
       <Button
         text="Далее"

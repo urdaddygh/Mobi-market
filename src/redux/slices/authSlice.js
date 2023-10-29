@@ -4,7 +4,6 @@ import {requests} from "../api";
 
 const initialState = {
     error: false,
-    password:{}
 };
 
 export const postAuth = createAsyncThunk(
@@ -12,21 +11,33 @@ export const postAuth = createAsyncThunk(
     async (data) => {
         // localStorage.removeItem('access')
         const res = await requests.authApi(data.values);
-        localStorage.setItem("access", res.data.access)
-        // console.log("access", res.data); 
-
+        setCookie("access", res.data.access)
+        setCookie("refresh", res.data.refresh)
+        console.log("great", res.data);
         data.navigate('/main/serviceOne')
-        localStorage.setItem('user_id', res.data.user_id)
-
+        // localStorage.setItem('user_id', res.data.user_id)
         return res.data;
     }
 );
+
+export const forgotPassword = createAsyncThunk(
+    'auth/forgotPassword',
+    async (data) => {
+        console.log("dsadsa", data)
+        // const res = await requests.forgotPassword(data.values);
+
+        // console.log("change", res.data);
+        data.onClick()
+        // return res.data;
+    }
+);
+
 
 export const changePass = createAsyncThunk(
     'auth/changePass',
     async (data) => {
         console.log("dsadsa", data)
-        const res = await requests.changePass(data.value);
+        const res = await requests.changePass(data.values);
 
         console.log("change", res.data);
         data.handleOpenSuccessModal()
@@ -40,11 +51,24 @@ const authSlice = createSlice({
     extraReducers: {
         [postAuth.pending]: (state) => {
             state.error = false;
+            // console.log(action)
         },
-        [postAuth.fulfilled]: (state, action) => {
+        [postAuth.fulfilled]: (state) => {
+            // console.log(action)
             state.error = false;
         },
         [postAuth.rejected]: (state) => {
+            // console.log(action)
+            state.error = true;
+        },
+        [forgotPassword.pending]: (state) => {
+            state.error = false;
+        },
+        [forgotPassword.fulfilled]: (state, action) => {
+            state.error = false;
+            state.password = action.payload
+        },
+        [forgotPassword.rejected]: (state) => {
             state.error = true;
         },
 

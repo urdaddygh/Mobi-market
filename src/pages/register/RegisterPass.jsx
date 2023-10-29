@@ -39,10 +39,12 @@ function RegisterPass() {
   });
 
   const dispatch = useDispatch();
-  const err = useSelector((state) => state.auth.error);
+  const err = useSelector((state) => state.register.error);
   //   console.log(err);
 
   const formik = useFormik({
+    validateOnChange:false,
+    validateOnBlur:false,
     initialValues: {
       password: "",
       confirm_password: "",
@@ -80,8 +82,8 @@ function RegisterPass() {
     setState(!state);
   };
 
-  formik.errors.password &&
-    formik.touched.confirm_password &&
+  formik.errors.password ||
+    formik.errors.confirm_password &&
     showToErrMessage(
       "Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число"
     );

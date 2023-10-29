@@ -9,6 +9,7 @@
     background-color:#5458EA;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 }
 .button:disabled{
     background-color: #C0C0C0;

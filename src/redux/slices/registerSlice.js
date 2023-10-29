@@ -42,7 +42,7 @@ export const postRegister = createAsyncThunk(
 //     }
 // );
 
-const authSlice = createSlice({
+const registerSlice = createSlice({
     name: 'register',
     initialState,
     extraReducers: {
@@ -63,4 +63,4 @@ const authSlice = createSlice({
     },
 });
 
-export const authSlices = authSlice.reducer;
+export const registerSlices = registerSlice.reducer;

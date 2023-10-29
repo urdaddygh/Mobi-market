@@ -11,11 +11,12 @@ const Passinput = ({
   type,
   letteSpacing,
   fontSize,
-  color
+  color,
+  margin
 }) => {
   return (
       <input
-        style={{ padding: padding, letterSpacing:letteSpacing, fontSize:fontSize, color:color }}
+        style={{ padding: padding, letterSpacing:letteSpacing, fontSize:fontSize, color:color, margin:margin }}
         className={s.input}
         placeholder={placeholder}
         value={value}
