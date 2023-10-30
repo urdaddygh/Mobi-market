@@ -9,23 +9,10 @@ import * as Yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useFormik } from "formik";
-import { postAuth } from "../../redux/slices/authSlice";
-import { Modal } from "../../components/modal/Modal";
-import InputMask from "react-input-mask";
+import { changeErr, postAuth } from "../../redux/slices/authSlice";
 import ModalForPhone from "./ModalForPhone";
 import ModalForMessage from "./ModalForMessage";
 import ModalForPassword from "./ModalForPassword";
-
-// function PhoneInput(props) {
-//   return (
-//     <InputMask
-//       mask="0\(000) 000 000"
-//       value={props.value}
-//       onChange={props.onChange}
-//       alwaysShowMask={false}
-//     ></InputMask>
-//   );
-// }
 
 function Auth() {
   const [state, setState] = useState(false);
@@ -44,7 +31,7 @@ function Auth() {
     setThirdModalActive(true)
     setSecondModalActive(false)
   }
-  console.log(authErr);
+  console.log(authErr,"current");
 
   const showToErrMessage = (text) => {
     toast.error(text, {
@@ -59,7 +46,7 @@ function Auth() {
   const SignupSchema = Yup.object().shape({
     username: Yup.string().min(2, "").max(50, ""),
   });
-
+ 
   const formik = useFormik({
     validateOnChange: false,
     validateOnMount: false,
@@ -70,18 +57,19 @@ function Auth() {
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
-      let data = { values, navigate };
+      let data = { values, navigate, showToErrMessage };
       dispatch(postAuth(data));
-      console.log(values);
-      if (authErr) {
-        showToErrMessage("Неверный логин или пароль");
-      }
     },
   });
 
-  // const [phone1, setPhone] = useState("");
-  // const handleInput = ({ target: { value } }) => setPhone(value);
+    if(formik.values.username===""){
 
+      dispatch(changeErr(false))
+    }
+    if(formik.values.password===""){
+      dispatch(changeErr(false))
+    }
+    
   return (
     <div className={s.cont}>
       <img src={backround} alt="backround" />
@@ -96,7 +84,7 @@ function Auth() {
             name="username"
             value={formik.values.username}
             onChange={formik.handleChange}
-            color={authErr && "red"}
+            color={authErr && formik.values.username!=="" && "red"}
           />
           <div className={s.cont_pass}>
             <Input
@@ -108,7 +96,7 @@ function Auth() {
               value={formik.values.email}
               onChange={formik.handleChange}
               margin="47px 0 0px 0px"
-              color={authErr && "red"}
+              color={authErr&&formik.values.password!=="" && "red"}
             />
             {state ? (
               <img src={open_eye_auth} alt="" onClick={toggle} className={s.eye_auth}/>
@@ -129,27 +117,6 @@ function Auth() {
         <ModalForPhone modalActive={modalActive} setModalActive={setModalActive} onClick={changeActive}/>
         <ModalForMessage secondmodalActive={secondModalActive} setSecondModalActive={setSecondModalActive} allRight={changeActiveToPassword}/>
         <ModalForPassword modalActive={thirdModalActive} setModalActive={setThirdModalActive} />
-        {/* <Modal active={modalActive} setActive={setModalActive} width="565px">
-          <div className={s.modal_phone}>
-          <h4 className={s.number}>Введите номер телефона</h4>
-          <img src={phone} alt="" />
-          <h6 className={s.text}>Введите номер телефона</h6>
-          <p className={s.sms}>
-            Мы отправим вам СМС с кодом
-            <br /> подтверждения
-          </p>
-          <PhoneInput
-            value={phone1}
-            onChange={handleInput}
-            alwaysShowMask={false}
-          ></PhoneInput>
-
-          <div>
-            <button className={s.modal_btn}>Далее</button>
-          </div>
-          </div>
-        </Modal> */}
-        
         <NavLink to="/register/email">Зарегистрироваться</NavLink>
       </section>
     </div>
