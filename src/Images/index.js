@@ -12,6 +12,12 @@ import liked_icon from './liked_icon.svg'
 import products_icon from './products_icon.svg'
 import logout_icon from './logout_icon.svg'
 import vector_icon from './vector_icon.svg'
+import shop_icon from './shop.png'
+import heart_icon from './heart_icon.svg'
+import img from './image.png'
+import arrow_left from './arrow_left.svg'
+import arrow_right from './arrow_right.svg'
+
 export{
     arrow_back,
     lock,
@@ -26,5 +32,10 @@ export{
     liked_icon,
     products_icon,
     logout_icon,
-    vector_icon
+    vector_icon,
+    shop_icon,
+    heart_icon,
+    img,
+    arrow_left,
+    arrow_right
 }

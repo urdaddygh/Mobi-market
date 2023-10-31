@@ -1,0 +1,46 @@
+.pagination{
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination div{
+    margin-right: 8px;
+}
+.pagination_box{
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+    background: #5458EA;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.pagination_box:active {
+    background: red;
+}
+
+.vector_img{
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #5458EA;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.opacity{
+    opacity: 30%;
+    pointer-events: none;
+}
+.unactive{
+    visibility: hidden;
+}

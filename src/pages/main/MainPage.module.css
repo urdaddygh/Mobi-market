@@ -1,0 +1,50 @@
+main {
+    padding: 24px 42px;
+    background-color: #F0F0F0;
+    height: 100vh;
+    height: 100%;
+    position: relative;
+}
+
+.first_section {
+    margin-top: 44px;
+    display: flex;
+    justify-content:flex-start;
+    flex-wrap: wrap;
+}
+
+.product_card {
+    width: 154px;
+    height: 184px;
+    background-color: #FFFF;
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 20px;
+    margin-right: 15px;
+}
+
+.product_card h4 {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 4px;
+    height: 34px;
+}
+
+.product_card p {
+    font-weight: 500;
+    font-size: 14px;
+    color: #5D5FEF;
+    margin-bottom: 4px;
+}
+
+.product_card span {
+    font-weight: 400px;
+    color: #C1C1C1;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.heart_icon {
+    align-items: center;
+    display: flex;
+}

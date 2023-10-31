@@ -5,7 +5,7 @@ const access = getCookie("access")
 // const access = localStorage.getItem("access")
 
 const fetchAPI = axios.create({
-    baseURL: "http://172.30.4.27/",
+    baseURL: "https://neobook.online/mobi-market/",
     headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${access}`,
@@ -22,7 +22,8 @@ export const requests = {
     authApi:(data)=>fetchNoTokenAPI.post("users/login/", data),
     forgotPassword:(data)=>fetchNoTokenAPI.post("users/forgot-password/", data),
     registerApi:(data)=>fetchNoTokenAPI.post("users/register/", data),
-
+    getProducts:(data)=>fetchAPI.get(`products/?page=${data}&limit=2`),
+    getProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     // getUsers:(id)=>fetchAPI.get(`user-profile/${id}/`),
     // postGetAdress:(data)=>fetchAPI.post("citizen-address-info/", data),
     // postGetFamily:(data)=>fetchAPI.post("citizen-family-info/", data),
