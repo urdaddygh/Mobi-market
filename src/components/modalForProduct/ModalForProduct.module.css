@@ -1,0 +1,53 @@
+
+.cross_icon{
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    align-items: center;
+}
+.cont h4{
+    margin-top: 24px;
+    margin-bottom: 12px;
+    color:#5458EA;
+    font-weight: bold;
+    font-size: 24px;
+}
+.cont span{
+    color:#494949;
+    font-weight: 500;
+}
+.heart_icon {
+    align-items: center;
+    display: flex;
+    margin-top: 12px;
+}
+.heart{
+    cursor: pointer;
+}
+.heart_icon span{
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 50%;
+    margin-left: 5px;
+}
+.cont h3{
+    margin: 16px 0;
+    color:#494949;
+    font-weight: bold;
+    font-size: 18px;
+}
+.cont p{
+    font-weight: 400;
+    color: #C0C0C0;
+    margin-bottom: 16px;
+}
+.cont h5{
+    font-weight: 500;
+    color: #494949;
+    margin-bottom: 12px;
+}

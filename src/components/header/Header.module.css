@@ -9,6 +9,7 @@ header{
 }
 .icon h1{
     margin-left: 8px;
+    white-space: nowrap;
 }
 .cont_profile {
     border-radius: 100%;

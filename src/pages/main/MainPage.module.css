@@ -48,3 +48,6 @@ main {
     align-items: center;
     display: flex;
 }
+.heart{
+    cursor: pointer;
+}

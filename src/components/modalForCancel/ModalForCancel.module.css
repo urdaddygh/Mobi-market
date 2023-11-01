@@ -1,0 +1,28 @@
+.modal_cancel {
+    width: 320px;
+    height: 104px;
+    padding: 12px 16px;
+    position: absolute;
+    top: 44px;
+    right: 44px;
+    gap: 8px;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.yes {
+    margin-left: 21px;
+    margin-right: 43px;
+    color: #5458EA;
+    font-weight: 500;
+    cursor: pointer;
+}
+.no {
+    cursor: pointer;
+    color: #F34545;
+    font-weight: 500;
+}
+
+.cont {
+    margin-top: 16px;
+}

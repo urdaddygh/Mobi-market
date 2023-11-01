@@ -3,7 +3,9 @@ import { requests } from "../api";
 
 const initialState = {
   error: false,
+  likeErr:true,
   products:[],
+  product:{},
 };
 
 export const getProducts = createAsyncThunk(
@@ -17,8 +19,19 @@ export const getProducts = createAsyncThunk(
     }
   }
 );
+export const getProductsById = createAsyncThunk(
+  "getProductsReducer/getProductsById",
+  async (data) => {
+    try {
+      const res = await requests.getProductsById(data);
+      return res.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
 export const getProductsForPagination = createAsyncThunk(
-  "getProductsReducer/getProducts",
+  "getProductsReducer/getProductsForPagination",
   async (data) => {
     try {
       const res = await requests.getProductsForPagination(data);
@@ -28,6 +41,18 @@ export const getProductsForPagination = createAsyncThunk(
     }
   }
 );
+export const likeProduct = createAsyncThunk(
+  "getProductsReducer/likeProduct",
+  async (data) => {
+    try {
+      const res = await requests.likeProduct(data);
+      return res.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
+
 
 const productsApiSlice = createSlice({
   name: "getProductsReducer",
@@ -43,6 +68,16 @@ const productsApiSlice = createSlice({
     [getProducts.rejected]: (state) => {
       state.error = false;
     },
+    [getProductsById.pending]: (state) => {
+      state.error = false;
+    },
+    [getProductsById.fulfilled]: (state,action) => {
+      state.product = action.payload;
+      state.error = true;
+    },
+    [getProductsById.rejected]: (state) => {
+      state.error = false;
+    },
     [getProductsForPagination.pending]: (state) => {
       state.error = false;
     },
@@ -52,6 +87,16 @@ const productsApiSlice = createSlice({
     },
     [getProductsForPagination.rejected]: (state) => {
       state.error = false;
+    },
+    [likeProduct.pending]: (state) => {
+      state.likeErr = false;
+    },
+    [likeProduct.fulfilled]: (state,action) => {
+      state.products = action.payload;
+      state.likeErr = true;
+    },
+    [likeProduct.rejected]: (state) => {
+      state.likeErr = false;
     },
   },
 });

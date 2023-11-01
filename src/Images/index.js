@@ -17,6 +17,9 @@ import heart_icon from './heart_icon.svg'
 import img from './image.png'
 import arrow_left from './arrow_left.svg'
 import arrow_right from './arrow_right.svg'
+import red_heart_icon from './red_heart_icon.svg'
+import cross_icon from './cross_icon.svg'
+import addImg from './addImg.png'
 
 export{
     arrow_back,
@@ -35,7 +38,10 @@ export{
     vector_icon,
     shop_icon,
     heart_icon,
+    red_heart_icon,
     img,
     arrow_left,
-    arrow_right
+    arrow_right,
+    cross_icon,
+    addImg
 }

@@ -1,0 +1,20 @@
+.cross_icon{
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.input{
+    background-image: url(../../Images/addImg.png);
+    width: 76px;
+    height: 96px;
+    cursor: pointer;
+}
+.input::file-selector-button {
+    visibility: hidden;
+}
