@@ -1,4 +1,4 @@
-.cross_icon{
+.cross_icon {
     position: absolute;
     right: 16px;
     top: 16px;
@@ -9,12 +9,47 @@
     align-items: center;
     cursor: pointer;
 }
-.input{
+
+.input_img {
     background-image: url(../../Images/addImg.png);
     width: 76px;
     height: 96px;
     cursor: pointer;
+    margin-bottom: 16px;
 }
-.input::file-selector-button {
+
+.input_img::file-selector-button {
     visibility: hidden;
+}
+
+.input {
+    background-color: #F7F6F9;
+    border-radius: 12px;
+    padding: 10px 16px;
+    width: 100%;
+    color: #494949;
+    margin-top: 8px;
+}
+
+.input::placeholder {
+    opacity: 50%;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto;
+    width: 280px;
+    height: 44px;
+    background-color:#5D5FEF;
+    border-radius: 16px;
+    margin-top: 24px;
+    font-weight: bold;
+    color: white;
+}
+.button:disabled{
+    background-color:#F7F6F9;
+    color: #9CA4AB;
 }

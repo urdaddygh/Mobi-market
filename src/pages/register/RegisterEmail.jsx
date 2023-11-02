@@ -14,10 +14,9 @@ import BackToPrevBtn from "../../components/backToPrevBtn/BackToPrevBtn";
 function RegisterEmail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [state, setState] = useState(false)
-  
-  const showToastMessage = () => {
-    toast.error("Неверный логин или почта", {
+
+  const showToastMessage = (data) => {
+    toast.error(data, {
       position: toast.POSITION.TOP_CENTER,
       className: "popup",
     });
@@ -27,6 +26,8 @@ function RegisterEmail() {
     username: Yup.string().min(2).max(50).matches(/(?=.*[a-z])\w+/),
     email: Yup.string().email(),
   });
+
+ 
 
   const formik = useFormik({
     validateOnChange: false,
@@ -39,8 +40,8 @@ function RegisterEmail() {
     onSubmit: (values) => {
       // console.log(formik.errors.email);
       // let data = { values, navigate };
+      console.log(formik.errors.email,"dsa");
       if (formik.errors.email) {
-        console.log(formik.errors.email);
         showToastMessage();
       } else {
         console.log(formik.errors);
@@ -50,6 +51,11 @@ function RegisterEmail() {
       }
     },
   });
+
+  useEffect(() => {
+    if (formik.errors.email) showToastMessage("Неверная почта");
+    else if (formik.errors.username) showToastMessage("Неверное имя пользователя");
+  }, [formik.errors]);
   return (
     <form onSubmit={formik.handleSubmit}>
       <BackToPrevBtn to="/" />

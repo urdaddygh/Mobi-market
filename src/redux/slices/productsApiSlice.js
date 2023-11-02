@@ -6,6 +6,7 @@ const initialState = {
   likeErr:true,
   products:[],
   product:{},
+  likedProducts:[]
 };
 
 export const getProducts = createAsyncThunk(
@@ -16,6 +17,18 @@ export const getProducts = createAsyncThunk(
       return res.data;
     } catch (err) {
       throw new Error(err);
+    }
+  }
+);
+export const getLikedProducts = createAsyncThunk(
+  "getProductsReducer/getLikedProducts",
+  async () => {
+    try {
+      const res = await requests.getProductsLiked();
+      return res.data;
+    } catch (err) {
+      
+      throw new Error(console.log(err));
     }
   }
 );
@@ -68,6 +81,18 @@ const productsApiSlice = createSlice({
     [getProducts.rejected]: (state) => {
       state.error = false;
     },
+
+    [getLikedProducts.pending]: (state) => {
+      state.error = false;
+    },
+    [getLikedProducts.fulfilled]: (state,action) => {
+      state.likedProducts = action.payload;
+      state.error = true;
+    },
+    [getLikedProducts.rejected]: (state) => {
+      state.error = false;
+    },
+
     [getProductsById.pending]: (state) => {
       state.error = false;
     },
@@ -78,6 +103,7 @@ const productsApiSlice = createSlice({
     [getProductsById.rejected]: (state) => {
       state.error = false;
     },
+
     [getProductsForPagination.pending]: (state) => {
       state.error = false;
     },
@@ -88,6 +114,7 @@ const productsApiSlice = createSlice({
     [getProductsForPagination.rejected]: (state) => {
       state.error = false;
     },
+
     [likeProduct.pending]: (state) => {
       state.likeErr = false;
     },
@@ -98,6 +125,7 @@ const productsApiSlice = createSlice({
     [likeProduct.rejected]: (state) => {
       state.likeErr = false;
     },
+
   },
 });
 

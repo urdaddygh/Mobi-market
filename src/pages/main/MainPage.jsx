@@ -15,6 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ModalForProduct from "../../components/modalForProduct/ModalForProduct";
 import ModalForAddProduct from "../../components/modalForAddProduct/ModalForAddProduct";
 import { ModalForCancel } from "../../components/modalForCancel/ModalForCancel";
+import NavBar from "../../components/navbar/NavBar";
 
 function MainPage() {
   const [modalActive, setModalActive] = useState(false);
@@ -43,7 +44,7 @@ function MainPage() {
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products.error);
   const likeErr = useSelector((state) => state.products.likeErr);
-  console.log(product);
+  console.log(likeErr);
 
   const likeProductById = (id, e) => {
     e.stopPropagation();
@@ -71,6 +72,7 @@ function MainPage() {
         name="Алеся"
         username="sergeykrash01"
         onClick={() => setSecondModalActive(true)}
+        to="/profile/profilePage"
       />
       <section className={s.first_section}>
         {err ? (
@@ -130,7 +132,6 @@ function MainPage() {
       {cancelModalActive && (
         <ModalForCancel yesClick={clickOnYes} noClick={clickOnNo} />
       )}
-      {/* <ModalForCancel/> */}
     </main>
   );
 }

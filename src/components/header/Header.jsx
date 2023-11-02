@@ -2,8 +2,9 @@ import React from "react";
 import s from "./Header.module.css";
 import { profile_icon, shop_icon } from "../../Images";
 import Button from "../button/Button";
+import { NavLink } from "react-router-dom";
 
-function Header({name, username, onClick}) {
+function Header({name, username, onClick, to}) {
   return (
     <header>
       <div className={s.icon}>
@@ -16,9 +17,9 @@ function Header({name, username, onClick}) {
           <h6>{name}</h6>
           <p>{username}</p>
         </span>
-        <div className={s.cont_profile}>
+        <NavLink to={to} className={s.cont_profile} >
           <img src={profile_icon} alt="" />
-        </div>       
+        </NavLink>       
       </div>
     </header>
   );

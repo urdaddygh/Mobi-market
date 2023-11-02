@@ -34,7 +34,7 @@ export const Pagination = ({ page, take, previous, next, takeTwo }) => {
         >
           {index + 1}
         </div>
-      )):<>sadsa</>}
+      )):<></>}
       <div
         className={next !== null ? s.vector_img : s.unactive}
         onClick={() => pagination(next)}

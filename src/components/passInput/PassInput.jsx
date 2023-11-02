@@ -12,7 +12,8 @@ const Passinput = ({
   letteSpacing,
   fontSize,
   color,
-  margin
+  margin,
+  onBlur
 }) => {
   return (
       <input
@@ -24,6 +25,7 @@ const Passinput = ({
         name={name}
         type={type}
         id={id}
+        onBlur={onBlur}
       />
   );
 };

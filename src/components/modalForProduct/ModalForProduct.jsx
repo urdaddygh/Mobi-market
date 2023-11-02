@@ -16,7 +16,7 @@ const ModalForProduct = ({
   name,
   likeProductById,
   full_description,
-  closeModal
+  closeModal,
 }) => {
   return (
     
@@ -32,7 +32,7 @@ const ModalForProduct = ({
           <img
             src={liked_by_current_user ? red_heart_icon : heart_icon}
             alt=""
-            onClick={() => likeProductById(id)}
+            onClick={(e) => likeProductById(id, e)}
             className={s.heart}
           />
           <span>Нравится: {like_count}</span>

@@ -43,7 +43,7 @@ function RegisterPass() {
   //   console.log(err);
 
   const formik = useFormik({
-    validateOnChange:false,
+    validateOnChange:true,
     validateOnBlur:false,
     initialValues: {
       password: "",
@@ -51,6 +51,7 @@ function RegisterPass() {
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
+
       if (values.password === values.confirm_password) {
         let email = localStorage.getItem("email");
         email = JSON.parse(email);
@@ -67,6 +68,7 @@ function RegisterPass() {
       }
     },
   });
+  console.log(formik.errors, "error")
 
   function toggleForPass() {
     setPass(!pass);
@@ -76,17 +78,17 @@ function RegisterPass() {
     if (err === false) {
       navigate("/register/email");
     }
+    
   }, []);
 
   const toggle = () => {
     setState(!state);
   };
 
-  formik.errors.password ||
-    formik.errors.confirm_password &&
-    showToErrMessage(
-      "Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число"
-    );
+  useEffect(()=>{
+    if(formik.errors.password || formik.errors.confirm_password) showToErrMessage("Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число");
+     
+  },[formik.errors])
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -139,7 +141,7 @@ function RegisterPass() {
               margin="46px 0 0 0 "
               type="submit"
               disabled={
-                !(formik.values.password && formik.values.confirm_password)
+                (formik.errors.confirm_password)
               }
             />
           </>
@@ -149,7 +151,7 @@ function RegisterPass() {
             margin="86px 0 0 0 "
             onClick={toggleForPass}
             // type="submit"
-            disabled={!formik.values.password}
+            disabled={formik.errors.password}
           />
         )}
       </div>

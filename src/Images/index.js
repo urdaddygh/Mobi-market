@@ -20,6 +20,7 @@ import arrow_right from './arrow_right.svg'
 import red_heart_icon from './red_heart_icon.svg'
 import cross_icon from './cross_icon.svg'
 import addImg from './addImg.png'
+import exit_icon from './exit_icon.png'
 
 export{
     arrow_back,
@@ -43,5 +44,6 @@ export{
     arrow_left,
     arrow_right,
     cross_icon,
-    addImg
+    addImg,
+    exit_icon
 }

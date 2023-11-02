@@ -1,0 +1,16 @@
+.cont{
+    display: flex;
+    flex-direction: row;
+}
+.navBar{
+    padding: 24px 32px 0 43px;
+    max-width: 540px;
+    flex: 2;
+}
+.profile{
+    position: relative;
+    flex: 1;
+    padding: 29px 115px;
+    background-color: #F7F6F9;
+    height: 100vh;
+}

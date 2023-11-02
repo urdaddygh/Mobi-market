@@ -16,6 +16,7 @@
     display: flex;
     justify-content: center;
     margin-right: 12px;
+    cursor: pointer;
 }
 
 .cont span h6 {
@@ -37,6 +38,7 @@
     margin-bottom: 9px;
     padding-left: 10px;
     position: relative;
+    cursor: pointer;
 }
 .link_cont img{
 margin-right: 9px;
@@ -62,4 +64,26 @@ margin-right: 9px;
 }
 .active_link img{
     margin-right: 9px;
+}
+.exit{
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    margin-bottom: 23px;
+}
+.cancel{
+    width: 280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    background-color: white;
+    margin-top: 4px;
+    font-weight: bold;
+    color:#494949;
+    cursor: pointer;
+}
+.p{
+    text-align: center;
 }
