@@ -7,10 +7,12 @@ import { requests } from "../api";
 
 const initialState = {
   error: false,
+  user: {},
 };
 
 export const postAuth = createAsyncThunk("auth/postAuth", async (data) => {
-  // localStorage.removeItem('access')
+  removeCookie("access");
+  removeCookie("refresh");
   try {
     const res = await requests.authApi(data.values);
     //   if(res.data)
@@ -18,7 +20,6 @@ export const postAuth = createAsyncThunk("auth/postAuth", async (data) => {
     setCookie("refresh", res.data.refresh);
     data.navigate("/main");
     // localStorage.setItem('user_id', res.data.user_id)
-    console.log(res.data)
     return res.data;
   } catch (err) {
     data.showToErrMessage("Неверный логин или пароль ");
@@ -59,14 +60,15 @@ const authSlice = createSlice({
       state.error = false;
       // console.log(action)
     },
-    [postAuth.fulfilled]: (state) => {
-      // console.log(action)
+    [postAuth.fulfilled]: (state, action) => {
+      state.user = action.payload;
       state.error = false;
     },
     [postAuth.rejected]: (state) => {
       // console.log(action)
       state.error = true;
     },
+
     [forgotPassword.pending]: (state) => {
       state.error = false;
     },

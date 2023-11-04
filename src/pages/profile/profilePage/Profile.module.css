@@ -45,8 +45,12 @@ margin-top: 12px;
 }
 .add_number p{
 position: absolute;
+top: 12px;
 left: 16px;
 cursor: pointer;
+color:#5458EA;
+align-items: center;
+
 }
 .input_number{
     border-bottom:1px solid #F7F6F9 ;
@@ -54,6 +58,7 @@ cursor: pointer;
     height: 44px;
     text-align: right;
     padding-right: 16px;
+    cursor: pointer;
 }
 .input_number::placeholder{
     opacity: 50%;

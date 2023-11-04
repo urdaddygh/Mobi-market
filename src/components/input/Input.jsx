@@ -13,7 +13,8 @@ const Input = ({
   id,
   margin,
   color,
-  accept
+  accept,
+  readOnly
 }) => {
   return (
     <div className={s.form_row}>
@@ -28,6 +29,7 @@ const Input = ({
         id={id}
         required autoComplete="off"
         accept={accept}
+        readOnly={readOnly}
       />
       <label className={s.label} htmlFor={forLabel}>
         {valueLabel}

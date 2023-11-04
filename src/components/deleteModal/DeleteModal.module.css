@@ -1,0 +1,22 @@
+.cont{
+    display: flex;
+    flex-direction: column;
+}
+.delete_icon{
+    margin: 0 auto;
+}
+.cont p {
+   text-align: center;
+   margin: 24px 0;
+}
+.cont span {
+    text-align: center;
+    margin: 4px auto;
+    cursor: pointer;
+    width: 280px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+ 

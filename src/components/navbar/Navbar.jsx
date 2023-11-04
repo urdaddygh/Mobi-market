@@ -32,7 +32,6 @@ function NavBar({ name, username, className }) {
     removeCookie("access");
     removeCookie("refresh");
     navigate('/')
-    console.log("done")
   };
   return (
     <div className={className}>

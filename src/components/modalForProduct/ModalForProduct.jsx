@@ -17,9 +17,9 @@ const ModalForProduct = ({
   likeProductById,
   full_description,
   closeModal,
+  setSecondModalActive
 }) => {
   return (
-    
     <Modal active={active} setActive={setActive} width="564px" height="90%">
       <div className={s.cross_icon} onClick={closeModal}>
         <img src={cross_icon} alt="" />
@@ -27,12 +27,16 @@ const ModalForProduct = ({
       <img src={image} alt="" width="532px" height="320px" />
       <div className={s.cont}>
         <h4>{price} сом</h4>
-        <span>+996500 567-657</span>
+        <span>{phone_number}</span>
         <div className={s.heart_icon}>
           <img
             src={liked_by_current_user ? red_heart_icon : heart_icon}
             alt=""
-            onClick={(e) => likeProductById(id, e)}
+            onClick={
+              liked_by_current_user
+                ? () => setSecondModalActive(true)
+                : (e) => likeProductById(id, e)
+            }
             className={s.heart}
           />
           <span>Нравится: {like_count}</span>
@@ -43,7 +47,6 @@ const ModalForProduct = ({
         <p>{full_description}</p>
       </div>
     </Modal>
-
   );
 };
 

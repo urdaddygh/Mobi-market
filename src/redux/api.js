@@ -1,10 +1,7 @@
 import axios from "axios";
 import { getCookie } from "../utils/cookieFunction/cookieFunction";
 
-// const access = localStorage.getItem("access")
-
 const access = getCookie("access")
-
 
 const fetchAPI = axios.create({
     baseURL: "https://neobook.online/mobi-market/",
@@ -29,8 +26,6 @@ export const requests = {
     getProductsLiked:()=>fetchAPI.get(`products/liked/`),
     getProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     likeProduct:(data)=>fetchAPI.post("products/like/", data),
-    // getUsers:(id)=>fetchAPI.get(`user-profile/${id}/`),
-    // postGetAdress:(data)=>fetchAPI.post("citizen-address-info/", data),
-    // postGetFamily:(data)=>fetchAPI.post("citizen-family-info/", data),
-    // changePass:(data) =>fetchAPI.post("password-change", data),
+    unLikeProduct:(data)=>fetchAPI.post("products/unlike/", data),
+    updateUserInfo:(data)=>fetchAPI.put("users/profile/update/", data),
 }

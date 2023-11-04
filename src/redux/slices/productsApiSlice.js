@@ -3,10 +3,10 @@ import { requests } from "../api";
 
 const initialState = {
   error: false,
-  likeErr:true,
-  products:[],
-  product:{},
-  likedProducts:[]
+  likeErr: false,
+  products: [],
+  product: {},
+  likedProducts: [],
 };
 
 export const getProducts = createAsyncThunk(
@@ -59,6 +59,17 @@ export const likeProduct = createAsyncThunk(
   async (data) => {
     try {
       const res = await requests.likeProduct(data);
+      return res.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
+export const unLikeProduct = createAsyncThunk(
+  "getProductsReducer/unLikeProduct",
+  async (data) => {
+    try {
+      const res = await requests.unLikeProduct(data);
       return res.data;
     } catch (err) {
       throw new Error(err);
@@ -123,6 +134,17 @@ const productsApiSlice = createSlice({
       state.likeErr = true;
     },
     [likeProduct.rejected]: (state) => {
+      state.likeErr = false;
+    },
+
+    [unLikeProduct.pending]: (state) => {
+      state.likeErr = false;
+    },
+    [unLikeProduct.fulfilled]: (state,action) => {
+      state.products = action.payload;
+      state.likeErr = true;
+    },
+    [unLikeProduct.rejected]: (state) => {
       state.likeErr = false;
     },
 

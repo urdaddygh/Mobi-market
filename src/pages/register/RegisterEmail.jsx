@@ -53,9 +53,10 @@ function RegisterEmail() {
   });
 
   useEffect(() => {
-    if (formik.errors.email) showToastMessage("Неверная почта");
+    if (formik.errors.email) showToastMessage("Некорректная почта");
     else if (formik.errors.username) showToastMessage("Неверное имя пользователя");
   }, [formik.errors]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <BackToPrevBtn to="/" />
