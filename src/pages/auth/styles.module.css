@@ -121,6 +121,7 @@ height: 14px;
     font-size: 17px;
     font-weight: 500;
     margin-top: 24px;
+    cursor: pointer;
 }
 .input_message{
     width: 120px;
@@ -154,4 +155,18 @@ height: 14px;
     right: 44px;
     cursor: pointer;    
     z-index: 1;
+}
+.mask{
+    height: 34px;
+    font-weight: bold;
+    font-size: 28px;
+    align-items: center;
+    margin: 24px auto 0 auto;
+    display: flex;
+    justify-content: center;
+    width: 234px;
+   
+}
+.mask::placeholder{
+    opacity: 50%;
 }

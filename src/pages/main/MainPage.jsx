@@ -8,6 +8,7 @@ import {
   getProductsById,
   getProductsForPagination,
   likeProduct,
+  unLikeProduct,
 } from "../../redux/slices/productsApiSlice";
 import Skeleton from "../../components/skeleton/Skeleton";
 import { Pagination } from "../../components/pagination/Pagination";
@@ -15,16 +16,18 @@ import { ToastContainer, toast } from "react-toastify";
 import ModalForProduct from "../../components/modalForProduct/ModalForProduct";
 import ModalForAddProduct from "../../components/modalForAddProduct/ModalForAddProduct";
 import { ModalForCancel } from "../../components/modalForCancel/ModalForCancel";
+import { getInfoOfUser } from "../../redux/slices/profileSlice";
+import DeleteModal from "../../components/deleteModal/DeleteModal";
 
 function MainPage() {
+  const [state, setState] = useState()
   const [modalActive, setModalActive] = useState(false);
   const [secondModalActive, setSecondModalActive] = useState(false);
   const [cancelModalActive, setCancelModalActive] = useState(false);
+  const [deleteModalActive, setDeleteModalActive] = useState(false)
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getProducts(1));
-  }, []);
+ 
 
   const showToastMessage = (data) => {
     toast.error(data, {
@@ -33,7 +36,7 @@ function MainPage() {
     });
   };
   const showSuccessMessage = (data) => {
-    toast.error(data, {
+    toast.success(data, {
       position: toast.POSITION.TOP_CENTER,
       className: "popup",
     });
@@ -42,21 +45,35 @@ function MainPage() {
   const products = useSelector((state) => state.products.products);
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products.error);
-  const likeErr = useSelector((state) => state.products.likeErr);
-  const userInfo = useSelector((state) => state.auth.user);
-  console.log(userInfo);
+  const userInfo = useSelector((state) => state.profile.user);
+  console.log(products);
 
   const likeProductById = (id, e) => {
     e.stopPropagation();
-    dispatch(likeProduct(id));
-    if (!likeErr) showToastMessage("Подтвердите свой аккаунт пожалуйста");
-    else showSuccessMessage("Товар добавлен в понравившиеся");
+    let data = {value:{product:id}, showToastMessage, showSuccessMessage}
+    dispatch(likeProduct(data));
+    dispatch(getProducts(products.page))
+    // window.location.reload();
+    setState({})
+  };
+
+  const unLikeProductById = (id, e) => {
+    e.stopPropagation();
+    setSecondModalActive(false)
+    dispatch(unLikeProduct(id));
+    dispatch(getProducts(products.page))
+    setState({})
   };
 
   const getProductForModal = (data) => {
     dispatch(getProductsById(data));
     setModalActive(true);
   };
+
+  const activeModal =()=>{
+    setDeleteModalActive(false)
+    setModalActive(true)
+  }
 
   const clickOnNo=()=>{
     setCancelModalActive(false)
@@ -65,18 +82,27 @@ function MainPage() {
     setCancelModalActive(false)
     setSecondModalActive(false)
   }
+  useEffect(() => {
+    dispatch(getProducts(1));
+    dispatch(getInfoOfUser())
+  }, []);
+
+  useEffect(() => {
+    
+  }, [products]);
+
   return (
     <main>
       <ToastContainer />
       <Header
-        name={userInfo?.name}
+        name={userInfo?.first_name}
         username={userInfo?.username}
         onClick={() => setSecondModalActive(true)}
         to="/profile/profilePage"
       />
       <section className={s.first_section}>
         {err ? (
-          products.results.map((el) => (
+          products?.results.map((el) => (
             <div
               className={s.product_card}
               key={el.id}
@@ -89,7 +115,11 @@ function MainPage() {
                 <img
                   src={el.liked_by_current_user ? red_heart_icon : heart_icon}
                   alt=""
-                  onClick={(e) => likeProductById(el.id, e)}
+                  onClick={
+                    el.liked_by_current_user
+                      ? (e) => unLikeProductById(el.id, e)
+                      : (e) => likeProductById(el.id, e)
+                  }
                   className={s.heart}
                 />
                 <span> {el.like_count}</span>
@@ -97,18 +127,21 @@ function MainPage() {
             </div>
           ))
         ) : (
-          <Skeleton count={32} />
+          <Skeleton count={2} />
         )}
       </section>
-      <div className={s.pagination_cont}>
-        <Pagination
-          page={products.page}
-          next={products.next}
-          previous={products.previous}
-          take={getProductsForPagination}
-          takeTwo={getProducts}
-        />
-      </div>
+      {products?.count > 2 && (
+        <div className={s.pagination_cont}>
+          <Pagination
+            page={products?.page}
+            next={products?.next}
+            previous={products?.previous}
+            take={getProductsForPagination}
+            takeTwo={getProducts}
+            count={products?.count}
+          />
+        </div>
+      )}
 
       <ModalForProduct
         active={modalActive}
@@ -123,6 +156,8 @@ function MainPage() {
         price={product.price}
         short_description={product.short_description}
         closeModal={() => setModalActive(false)}
+        phone_number={product.phone_number}
+        deleteModalActive={setDeleteModalActive}
       />
       <ModalForAddProduct
         active={secondModalActive}
@@ -132,6 +167,12 @@ function MainPage() {
       {cancelModalActive && (
         <ModalForCancel yesClick={clickOnYes} noClick={clickOnNo} />
       )}
+      <DeleteModal
+        acitve={deleteModalActive}
+        setActive={setDeleteModalActive}
+        onClick={(e) => unLikeProductById(product.id, e)}
+        cancelClick={activeModal}
+      />
     </main>
   );
 }

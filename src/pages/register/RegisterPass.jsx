@@ -35,7 +35,7 @@ function RegisterPass() {
       .min(8, "")
       .max(50, "")
       .matches(/(?=.*[0-9])(?=.*[A-Z])/),
-    confirm_password: Yup.string().min(8, "").max(50, ""),
+    // confirm_password: Yup.string().min(8, "").max(50, ""),
   });
 
   const dispatch = useDispatch();
@@ -86,13 +86,16 @@ function RegisterPass() {
   };
 
   useEffect(()=>{
-    if(formik.errors.password || formik.errors.confirm_password) showToErrMessage("Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число");
+    if (formik.errors.password || formik.errors.confirm_password)
+      showToErrMessage(
+        "Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число"
+      );
      
   },[formik.errors])
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <BackToPrevBtn to="/register/email" />
+      {pass ?<BackToPrevBtn to="/register/email"/>:<BackToPrevBtn onClick={()=>setPass(false)}/>}
       <ToastContainer />
       {state ? (
         <img src={close_eye} alt="" className={s.eye} onClick={toggle} />
@@ -151,7 +154,7 @@ function RegisterPass() {
             margin="86px 0 0 0 "
             onClick={toggleForPass}
             // type="submit"
-            disabled={formik.errors.password}
+            disabled={formik.errors.password ||!formik.values.password}
           />
         )}
       </div>

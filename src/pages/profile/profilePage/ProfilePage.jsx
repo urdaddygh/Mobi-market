@@ -8,7 +8,7 @@ import Button from "../../../components/button/Button";
 import ModalForPhone from "./ModalForPhone";
 import ModalForMessage from "./ModalForMessage";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserInfo } from "../../../redux/slices/profileSlice";
+import { getInfoOfUser, updateUserInfo } from "../../../redux/slices/profileSlice";
 import * as Yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -16,7 +16,13 @@ function ProfilePage() {
   const [modalActive, setModalActive] = useState(false);
   const [secondModalActive, setSecondModalActive] = useState(false);
   const dispatch = useDispatch()
-  const userInfo = useSelector(state=>state.auth.user)
+  useEffect(()=>{
+    dispatch(getInfoOfUser())
+  },[])
+  
+  const userInfo = useSelector(state=>state.profile.user)
+
+  console.log(userInfo)
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -32,6 +38,7 @@ function ProfilePage() {
   });
 
   const changeActive = () => {
+    // time = 60
     setSecondModalActive(true);
     setModalActive(false);
   };
@@ -53,14 +60,17 @@ function ProfilePage() {
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema:SignupSchema,
+    enableReinitialize:true,
     initialValues: {
-      last_name: "",
-      first_name: "",
+      last_name: userInfo.last_name,
+      first_name: userInfo.first_name,
       username: userInfo.username,
-      birth_date: "",
+      birth_date: userInfo.birth_date,
       email: userInfo.email,
+      phone:userInfo.phone
     },
     onSubmit: (values) => {
+      console.log(values)
       let data ={values:{...values}, showToErrMessage, showSuccessMessage}
       dispatch(updateUserInfo(data))
     },
@@ -74,9 +84,11 @@ function ProfilePage() {
     else if(formik.errors.username) showToErrMessage(formik.errors.username)
   },[formik.errors])
 
+ 
+
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <BackToPrevBtn to="/main" left="132px" />
       <h2 className={s.h2}>Профиль</h2>
       <div className={s.profile_icon}>
@@ -92,6 +104,15 @@ function ProfilePage() {
             onChange={formik.handleChange}
             className={s.input}
             placeholder="Имя"
+            readOnly={
+              (
+                formik.values.email &&
+                formik.values.birth_date &&
+                formik.values.first_name &&
+                formik.values.last_name &&
+                formik.values.username
+              )
+            }
           />
           <input
             type="text"
@@ -100,6 +121,15 @@ function ProfilePage() {
             onChange={formik.handleChange}
             className={s.input}
             placeholder="Фамилия"
+            readOnly={
+              (
+                formik.values.email &&
+                formik.values.birth_date &&
+                formik.values.first_name &&
+                formik.values.last_name &&
+                formik.values.username
+              )
+            }
           />
           <input
             type="text"
@@ -108,6 +138,15 @@ function ProfilePage() {
             onChange={formik.handleChange}
             className={s.input}
             placeholder="Имя пользователя"
+            readOnly={
+              (
+                formik.values.email &&
+                formik.values.birth_date &&
+                formik.values.first_name &&
+                formik.values.last_name &&
+                formik.values.username
+              )
+            }
           />
           <input
             type="text"
@@ -116,14 +155,23 @@ function ProfilePage() {
             onChange={formik.handleChange}
             className={s.input}
             placeholder="Дата рождения"
+            readOnly={
+              (
+                formik.values.email &&
+                formik.values.birth_date &&
+                formik.values.first_name &&
+                formik.values.last_name &&
+                formik.values.username
+              )
+            }
           />
         </div>
         <div className={s.add_number} onClick={() => setModalActive(true)}>
           <p>Добавить номер</p>
           <input
-            type="number"
-            name="number"
-            value={formik.values.number}
+            type="text"
+            name="phone"
+            value={formik.values.phone}
             onChange={formik.handleChange}
             className={s.input_number}
             placeholder="0(000) 000 000"
@@ -137,8 +185,31 @@ function ProfilePage() {
           onChange={formik.handleChange}
           className={s.input}
           placeholder="Почта"
+          readOnly={
+            (
+              formik.values.email &&
+              formik.values.birth_date &&
+              formik.values.first_name &&
+              formik.values.last_name &&
+              formik.values.username
+            )
+          }
         />
-        <Button text="Закончить регистрацию" margin="44px auto 0 auto" type="submit"/>
+        {!(
+          userInfo.email &&
+          userInfo.birth_date &&
+          userInfo.first_name &&
+          userInfo.last_name &&
+          userInfo.username
+        ) ? (
+          <Button
+            text="Закончить регистрацию"
+            margin="44px auto 0 auto"
+            type="submit"
+          />
+        ) : (
+          <></>
+        )}
       </form>
       <ModalForPhone
         modalActive={modalActive}
@@ -148,6 +219,7 @@ function ProfilePage() {
       <ModalForMessage
         secondmodalActive={secondModalActive}
         setSecondModalActive={setSecondModalActive}
+
       />
     </>
   );

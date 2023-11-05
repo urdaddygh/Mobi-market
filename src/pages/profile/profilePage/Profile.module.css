@@ -59,6 +59,7 @@ align-items: center;
     text-align: right;
     padding-right: 16px;
     cursor: pointer;
+    font-weight: 700;
 }
 .input_number::placeholder{
     opacity: 50%;
@@ -107,11 +108,18 @@ align-items: center;
     font-weight: bold;
     font-size: 28px;
     align-items: center;
-    margin: 0 auto;
+    margin: 24px auto 0 auto;
     display: flex;
     justify-content: center;
     width: 234px;
-    margin-bottom: 51px;
+}
+.err{
+    color: red;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 24px;
+    height: 22px;
 }
 .prloader_cont{
     display: flex;
@@ -139,6 +147,8 @@ align-items: center;
     font-size: 17px;
     font-weight: 500;
     margin-top: 24px;
+    text-align: center;
+    cursor: pointer;
 }
 .input_message{
     width: 120px;
@@ -157,4 +167,9 @@ align-items: center;
 .input_message::placeholder{
     opacity: 50%;
     color: #C0C0C0;
+}
+.wrong_code{
+    color: red;
+    margin-top: 16px;
+    text-align: center;
 }

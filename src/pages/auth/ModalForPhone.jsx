@@ -6,21 +6,35 @@ import InputMask from "react-input-mask";
 import { useFormik } from "formik";
 import { forgotPassword } from "../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
-function PhoneInput(props) {
+function PhoneInput({value,onChange,name,className, placeholder, type}) {
   return (
     <InputMask
-      mask=""
-      value={props.value}
-      onChange={props.onChange}
-      name={props.name}
-      alwaysShowMask={false}
+      mask="0\(999\) 999 999"
+      maskChar="_"
+      value={value}
+      onChange={onChange}
+      name={name}
+      alwaysShowMask={true}
+      className={className}
+      placeholder={placeholder}
+      type={type}
+      
     ></InputMask>
   );
 }
 
 function ModalForPhone({ modalActive, setModalActive, onClick }) {
   const dispatch = useDispatch();
+
+  const showErrMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
+
   const formik = useFormik({
     validateOnChange: false,
     validateOnMount: false,
@@ -28,19 +42,16 @@ function ModalForPhone({ modalActive, setModalActive, onClick }) {
     initialValues: {
       phone: "",
     },
-    // validationSchema: SignupSchema,
     onSubmit: (values) => {
-      let data = { values, onClick };
+      let data = { values, onClick,showErrMessage };
       dispatch(forgotPassword(data));
       console.log(values);
     },
   });
 
-  // const [phone1, setPhone] = useState("");
-  // const handleInput = ({ target: { value } }) => setPhone(value);
   return (
     <>
-      <Modal active={modalActive} setActive={setModalActive} width="565px">
+      <Modal active={modalActive} setActive={setModalActive} width="565px" height="70%">
         <div className={s.modal_phone}>
           <h4 className={s.number}>Введите номер телефона</h4>
           <img src={phone_img} alt="" />
@@ -55,6 +66,7 @@ function ModalForPhone({ modalActive, setModalActive, onClick }) {
               onChange={formik.handleChange}
               alwaysShowMask={false}
               name="phone"
+              className={s.mask}
             ></PhoneInput>
 
             <div>

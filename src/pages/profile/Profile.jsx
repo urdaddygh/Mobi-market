@@ -9,11 +9,11 @@ import { useSelector } from "react-redux";
 
 function Profile() {
 
-  const userInfo = useSelector(state=>state.auth.user)
-
+  const userInfo = useSelector(state=>state.profile.user)
+  
   return (
     <div className={s.cont}>
-      <NavBar name={userInfo.name} username={userInfo.username} className={s.navBar} />
+      <NavBar name={userInfo.first_name} username={userInfo.username} className={s.navBar} />
       <div className={s.profile}>
       <Routes>
         <Route path="/profilePage" element={<ProfilePage />} /> 

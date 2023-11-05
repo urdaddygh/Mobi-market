@@ -2,21 +2,11 @@ import React, { useEffect, useState } from "react";
 import { persone_img } from "../../Images";
 import s from "./styles.module.css";
 import { Modal } from "../../components/modal/Modal";
-import InputMask from "react-input-mask";
 import { useFormik } from "formik";
 import { Preloader, Oval } from "react-preloader-icon";
-
-function PhoneInput(props) {
-  return (
-    <InputMask
-      mask=""
-      value={props.value}
-      onChange={props.onChange}
-      name={props.name}
-      alwaysShowMask={false}
-    ></InputMask>
-  );
-}
+import { useDispatch, useSelector } from "react-redux";
+import { resetPassApi } from "../../redux/slices/authSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 function ModalForMessage({
   secondmodalActive,
@@ -25,65 +15,77 @@ function ModalForMessage({
 }) {
   const [count, setCount] = useState(60);
   const [state, setState] = useState(false);
-  useEffect(() => {
-    setInterval(function () {
-      setCount((prev) => prev - 1);
-    }, 1000);
-  }, []);
+  const dispatch = useDispatch()
+  const user = useSelector(state=>state.auth.user)
+  // console.log(user)
+  const startTimer =()=>{
+    setState(false)
+    setCount(60)
+  }
 
+  const showErrMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
   const formik = useFormik({
     validateOnChange: false,
     validateOnMount: false,
     validateOnBlur: false,
     initialValues: {
-      message: "",
+      code: "",
     },
     // validationSchema: SignupSchema,
     onSubmit: (values) => {
-      console.log(values.message);
+      let data = {allRight, showErrMessage, values, id:user.user_id}
+      console.log(data)
+      dispatch(resetPassApi(data))
       if (values.message === "1991") {
         setState(false);
         allRight()
       } else {
         setState(true);
       }
-      //   let data = { values, navigate };
-      //   dispatch(postAuth(data));
-      //   console.log(values);
     },
   });
+
+  useEffect(() => {
+    if(count === 0) return 
+
+    if(count>0 && secondmodalActive)
+    setTimeout(function () {
+     setCount((prev) => prev - 1);
+    }, 1000);
+  }, [count, secondmodalActive]);
+
   return (
     <>
+    <ToastContainer/>
       <Modal
         active={secondmodalActive}
         setActive={setSecondModalActive}
         width="565px"
+        height="60%"
       >
         <div className={s.modal_phone}>
           <h4 className={s.number}>Сброс пароля</h4>
           <img src={persone_img} alt="" />
           <h6 className={s.text}>Введите код из СМС</h6>
-          {/* <PhoneInput
-            value={formik.values.message}
-            onChange={formik.handleChange}
-            alwaysShowMask={false}
-            name="phone"
-          ></PhoneInput> */}
           <form onSubmit={formik.handleSubmit}>
             <input
-              type="text"
-              value={formik.values.message}
-              name="message"
-              id="message"
+              type="number"
+              value={formik.values.code}
+              name="code"
+              id="code"
               placeholder="0000"
               onChange={formik.handleChange}
               className={s.input_message}
             />
-            {/* <button type="submit">dsadsa</button> */}
             <div>
               {count <= 0 ? (
                 <>
-                  <p className={s.repeat_code}>Отправить код еще раз</p>
+                  <p className={s.repeat_code} onClick={startTimer}>Отправить код еще раз</p>
                   {state && (
                     <p style={{ color: "red", marginTop: "16px" }}>
                       Неверный код

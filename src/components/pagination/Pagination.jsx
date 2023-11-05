@@ -3,14 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import s from "./Pagination.module.css";
 import { arrow_left, arrow_right } from "../../Images";
 
-export const Pagination = ({ page, take, previous, next, takeTwo }) => {
+export const Pagination = ({ page, take, previous, next, takeTwo,count }) => {
   const dispatch = useDispatch();
-  const products = useSelector(state=>state.products.products)
 
-  let count = products.count  
-  let totalPages = Math.ceil(products.count /2) 
+  let totalPages = Math.ceil(count /2) 
   // let p = Array(pages)
-  // console.log(pages)
+  // console.log(count)
   const pagination = (next) => {
     dispatch(take(next));
   };
@@ -26,7 +24,7 @@ export const Pagination = ({ page, take, previous, next, takeTwo }) => {
       >
         <img src={arrow_left} alt="" />
       </div>
-      {count!==undefined?[...Array(totalPages)].map((_, index) => (
+      {count !== undefined?[...Array(totalPages)].map((_, index) => (
         <div
           key={index}
           className={page===index+1?s.pagination_box:s.pagination_unactive}

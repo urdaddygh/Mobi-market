@@ -1,7 +1,6 @@
 .input{
    border: none;
    width: 250px;
-   padding-left: 24px;
    font-size: 30px;
    font-weight: bold;
    line-height: 29px;
@@ -9,4 +8,5 @@
    gap: 12px;
    letter-spacing: 10px;
    height: 40px;
+   text-align: center;
 }

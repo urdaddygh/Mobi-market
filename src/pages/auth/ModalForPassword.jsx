@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { Modal } from "../../components/modal/Modal";
 import { ToastContainer, toast } from "react-toastify";
+import { changePassword } from "../../redux/slices/authSlice";
 
 function ModalForPassword({ modalActive, setModalActive }) {
   const [pass, setPass] = useState(false);
@@ -34,14 +35,14 @@ function ModalForPassword({ modalActive, setModalActive }) {
       .min(8, "")
       .max(50, "")
       .matches(/(?=.*[0-9])(?=.*[A-Z])/),
-    confirm_password: Yup.string().min(8, "").max(50, ""),
+    // confirm_password: Yup.string().min(8, "").max(50, ""),
   });
 
   const dispatch = useDispatch();
   //   console.log(err);
 
   const formik = useFormik({
-    validateOnChange: false,
+    validateOnChange: true,
     validateOnBlur: false,
     initialValues: {
       password: "",
@@ -50,13 +51,12 @@ function ModalForPassword({ modalActive, setModalActive }) {
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       if (values.password === values.confirm_password) {
-        //   let data = {
-        //     navigate,
-        //     data: { ...values, ...email },
-        //     showToSuccessMessage,
-        //   };
-        console.log(values);
-        //   dispatch(postRegister(data));
+          let data = {
+            values,
+            setModalActive,
+          };
+          console.log(values);
+          dispatch(changePassword(data));
       } else {
         showToErrMessage("Пароли не совпадают");
         setConfirm(true);
@@ -72,15 +72,17 @@ function ModalForPassword({ modalActive, setModalActive }) {
     setState(!state);
   };
 
-  formik.errors.password ||
-    (formik.errors.confirm_password &&
+  useEffect(()=>{
+    if (formik.errors.password || formik.errors.confirm_password)
       showToErrMessage(
         "Пароль должен быть больше 8 символов и содержать 1 заглавную букву и число"
-      ));
+      );
+     
+  },[formik.errors])
 
   return (
     <>
-      <Modal active={modalActive} setActive={setModalActive} width="565px">
+      <Modal active={modalActive} setActive={setModalActive} width="565px" height="80%">
         <form onSubmit={formik.handleSubmit}>
           {state ? (
             <img src={close_eye} alt="" className={s.eye_modal} onClick={toggle} />

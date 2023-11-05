@@ -17,7 +17,7 @@ const ModalForProduct = ({
   likeProductById,
   full_description,
   closeModal,
-  setSecondModalActive
+  deleteModalActive
 }) => {
   return (
     <Modal active={active} setActive={setActive} width="564px" height="90%">
@@ -34,7 +34,7 @@ const ModalForProduct = ({
             alt=""
             onClick={
               liked_by_current_user
-                ? () => setSecondModalActive(true)
+                ? () => deleteModalActive(true)
                 : (e) => likeProductById(id, e)
             }
             className={s.heart}

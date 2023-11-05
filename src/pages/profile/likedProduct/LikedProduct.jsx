@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import {
   getLikedProducts,
+  getLikedProductsForPagination,
   getProducts,
   getProductsById,
-  getProductsForPagination,
   likeProduct,
   unLikeProduct,
 } from "../../../redux/slices/productsApiSlice";
@@ -29,10 +29,7 @@ function LikedProduct() {
   
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getProducts(1));
-  }, []);
-
+  
   const showToastMessage = (data) => {
     toast.error(data, {
       position: toast.POSITION.TOP_CENTER,
@@ -46,24 +43,32 @@ function LikedProduct() {
     });
   };
 
-  const products = useSelector((state) => state.products.products);
+  const products = useSelector((state) => state.products.likedProducts);
   const product = useSelector((state) => state.products.product);
-  const err = useSelector((state) => state.products.error);
-  const likeErr = useSelector((state) => state.products.likeErr);
-  console.log(product);
+  const err = useSelector((state) => state.products.likedErr);
+  console.log(products);
+  useEffect(() => {
+    dispatch(getLikedProducts(1));
+  }, []);
 
-  const likeProductById = (id, e) => {
-    e.stopPropagation();
-    dispatch(likeProduct(id));
-    if (!likeErr) showToastMessage("Подтвердите свой аккаунт пожалуйста");
-    else showSuccessMessage("Товар добавлен в понравившиеся");
-  };
+  // const likeProductById = (id, e) => {
+  //   e.stopPropagation();
+  //   let data = {value:{product:id}, showToastMessage, showSuccessMessage}
+  //   dispatch(likeProduct(data));
+  // };
 
   const unLikeProductById = (id, e) => {
     e.stopPropagation();
     setSecondModalActive(false)
+    console.log(id)
     dispatch(unLikeProduct(id));
+    dispatch(getLikedProducts(products.page))
   };
+  const openDeleteModal=(e, id)=>{
+    e.stopPropagation();
+    dispatch(getProductsById(id))
+    setSecondModalActive(true)
+  }
   const getProductForModal = (data) => {
     dispatch(getProductsById(data));
     setModalActive(true);
@@ -93,7 +98,7 @@ function LikedProduct() {
                         el.liked_by_current_user ? red_heart_icon : heart_icon
                       }
                       alt=""
-                      onClick={(e) => likeProductById(el.id, e)}
+                      onClick={(e) => openDeleteModal(e, el.id)}
                       className={s.heart}
                     />
                     <span> {el.like_count}</span>
@@ -104,13 +109,16 @@ function LikedProduct() {
               <Skeleton count={16} />
             )}
           </div>
-          <Pagination
-            page={products.page}
-            next={products.next}
-            previous={products.previous}
-            take={getProductsForPagination}
-            takeTwo={getProducts}
-          />
+          {products?.count > 2 && (
+            <Pagination
+              page={products?.page}
+              next={products?.next}
+              previous={products?.previous}
+              take={getLikedProductsForPagination}
+              takeTwo={getLikedProducts}
+              count={products.count}
+            />
+          )}
         </>
       ) : (
         <img src={empty_icon} className={s.empty_icon} />
@@ -121,7 +129,6 @@ function LikedProduct() {
         full_description={product.full_description}
         id={product.id}
         image={product.image}
-        likeProductById={likeProductById}
         like_count={product.like_count}
         liked_by_current_user={product.liked_by_current_user}
         name={product.name}
@@ -129,11 +136,11 @@ function LikedProduct() {
         short_description={product.short_description}
         closeModal={() => setModalActive(false)}
         phone_number={product.phone_number}
-        setSecondModalActive={setSecondModalActive}
+        deleteModalActive={setSecondModalActive}
       />
       <DeleteModal
         acitve={secondModalActive}
-        setActive={secondModalActive}
+        setActive={setSecondModalActive}
         onClick={(e) => unLikeProductById(product.id, e)}
         cancelClick={activeModal}
       />

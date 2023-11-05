@@ -8,6 +8,7 @@ import { requests } from "../api";
 const initialState = {
   error: false,
   user: {},
+  verifyErr:false
 };
 
 export const postAuth = createAsyncThunk("auth/postAuth", async (data) => {
@@ -30,14 +31,78 @@ export const postAuth = createAsyncThunk("auth/postAuth", async (data) => {
 export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
   async (data) => {
-    console.log("dsadsa", data);
-    // const res = await requests.forgotPassword(data.values);
-
-    // console.log("change", res.data);
-    data.onClick();
-    // return res.data;
+    try {
+   
+      const res = await requests.forgotPassword(data.values);
+     
+      data.onClick();
+      return res.data;
+    } catch (error) {
+      data.showErrMessage("Пользователь с таким номером телефона отсуствует")
+      throw new Error(console.log(error))
+    }
   }
 );
+export const resetPassApi = createAsyncThunk(
+  "auth/resetPassApi",
+  async (data) => {
+    try {
+      const res = await requests.resetPassApi(data);
+      console.log("change", res.data);
+      data.allRight();
+      return res.data;
+    } catch (error) {
+      data.showErrMessage("Неверный код")
+      throw new Error(console.log(error))
+    }
+  }
+);
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (data) => {
+    try {
+      const res = await requests.changePassword(data.values);
+      console.log("change", res.data);
+      data.setModalActive(false)
+      return res.data;
+    } catch (error) {
+      // data.showErrMessage("Неверный код")
+      throw new Error(console.log(error))
+    }
+  }
+);
+
+export const sendCodeApi = createAsyncThunk(
+  "auth/sendCodeApi",
+  async (data) => {
+    try {
+      const res = await requests.sendCodeApi(data.values);
+      data.onClick();
+      console.log(res.data)
+      return res.data;
+    } catch (error) {
+      throw new Error(console.log(error))
+    }
+  }
+);
+
+export const verifyPhoneApi = createAsyncThunk(
+  "auth/verifyPhoneApi",
+  async (data) => {
+    try {
+      console.log(data)
+      const res = await requests.verifyPhoneApi(data.values);
+      data.showSuccessMessage("Данные успешно изменены");
+      data.setSecondModalActive(false)
+      console.log(res.data)
+      return res.data;
+    } catch (error) {
+      data.setState(false)
+      throw new Error(error)
+    }
+  }
+);
+
 
 export const changePass = createAsyncThunk("auth/changePass", async (data) => {
   console.log("dsadsa", data);
@@ -74,9 +139,29 @@ const authSlice = createSlice({
     },
     [forgotPassword.fulfilled]: (state, action) => {
       state.error = false;
-      state.password = action.payload;
+      state.user = action.payload;
     },
     [forgotPassword.rejected]: (state) => {
+      state.error = true;
+    },
+
+    [sendCodeApi.pending]: (state) => {
+      state.error = false;
+    },
+    [sendCodeApi.fulfilled]: (state) => {
+      state.error = false;
+    },
+    [sendCodeApi.rejected]: (state) => {
+      state.error = true;
+    },
+
+    [verifyPhoneApi.pending]: (state) => {
+      state.error = false;
+    },
+    [verifyPhoneApi.fulfilled]: (state) => {
+      state.error = false;
+    },
+    [verifyPhoneApi.rejected]: (state) => {
       state.error = true;
     },
 
@@ -91,14 +176,14 @@ const authSlice = createSlice({
       state.error = true;
     },
 
-    [changePass.pending]: (state) => {
+    [changePassword.pending]: (state) => {
       state.error = false;
     },
-    [changePass.fulfilled]: (state, action) => {
+    [changePassword.fulfilled]: (state, action) => {
       state.error = false;
-      state.password = action.payload;
+      // state.password = action.payload;
     },
-    [changePass.rejected]: (state) => {
+    [changePassword.rejected]: (state) => {
       state.error = true;
     },
   },

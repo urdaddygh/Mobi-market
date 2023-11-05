@@ -2,76 +2,76 @@ import React, { useEffect, useState } from "react";
 import { persone_img } from "../../../Images";
 import s from "./Profile.module.css";
 import { Modal } from "../../../components/modal/Modal";
-import InputMask from "react-input-mask";
 import { useFormik } from "formik";
 import { Preloader, Oval } from "react-preloader-icon";
-
-function PhoneInput(props) {
-  return (
-    <InputMask
-      mask=""
-      value={props.value}
-      onChange={props.onChange}
-      name={props.name}
-      alwaysShowMask={false}
-    ></InputMask>
-  );
-}
+import { useDispatch, useSelector } from "react-redux";
+import { verifyPhoneApi } from "../../../redux/slices/authSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 function ModalForMessage({
   secondmodalActive,
   setSecondModalActive,
-  allRight,
 }) {
   const [count, setCount] = useState(60);
   const [state, setState] = useState(false);
-  const [timer, setTimer] = useState(false);
-  console.log(timer)
+  const err = useSelector(state=>state.auth.error)
+  // console.log(count)
+  const dispatch = useDispatch()
+
+  const showSuccessMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
+
+  const startTimer =()=>{
+    setState(false)
+    setCount(60)
+  }
   useEffect(() => {
-    setInterval(function () {
-      setCount((prev) => prev - 1);
+    if(count === 0) return 
+
+    if(count>0 && secondmodalActive)
+    setTimeout(function () {
+     setCount((prev) => prev - 1);
     }, 1000);
-  }, [timer]);
+  }, [count, secondmodalActive]);
+  
+  console.log(count)
 
   const formik = useFormik({
     validateOnChange: false,
     validateOnMount: false,
     validateOnBlur: false,
     initialValues: {
-      message: "",
+      code: "",
     },
     // validationSchema: SignupSchema,
     onSubmit: (values) => {
-      console.log(values.message);
-      if (values.message === "1991") {
-        setState(false);
-        allRight();
-      } else {
-        setState(true);
-      }
-      //   let data = { values, navigate };
-      //   dispatch(postAuth(data));
-      //   console.log(values);
+      let data={values, showSuccessMessage, setState, setSecondModalActive}
+      dispatch(verifyPhoneApi(data))
     },
   });
   return (
     <>
+    <ToastContainer />
       <Modal
         active={secondmodalActive}
         setActive={setSecondModalActive}
         width="565px"
-        height="70%"
+        height="60%"
       >
         <div className={s.modal_phone}>
-          <h4 className={s.number}>Сброс пароля</h4>
+          <h4 className={s.number}>Изменить номер телефона</h4>
           <img src={persone_img} alt="" className={s.phone_icon} />
           <h6 className={s.text}>Введите код из СМС</h6>
           <form onSubmit={formik.handleSubmit}>
             <input
               type="text"
-              value={formik.values.message}
-              name="message"
-              id="message"
+              value={formik.values.code}
+              name="code"
+              id="code"
               placeholder="0000"
               onChange={formik.handleChange}
               className={s.input_message}
@@ -79,9 +79,9 @@ function ModalForMessage({
             <div>
               {count <= 0 ? (
                 <>
-                  <p className={s.repeat_code} onClick={()=>setTimer(!timer)}>Отправить код еще раз</p>
-                  {state && (
-                    <p style={{ color: "red", marginTop: "16px" }}>
+                  <p className={s.repeat_code} onClick={startTimer}>Отправить код еще раз</p>
+                  {err && (
+                    <p className={s.wrong_code}>
                       Неверный код
                     </p>
                   )}
@@ -99,8 +99,8 @@ function ModalForMessage({
                     />
                     <p>00:{count}</p>
                   </div>
-                  {state && (
-                    <p style={{ color: "red", marginTop: "16px" }}>
+                  {err && (
+                    <p className={s.wrong_code}>
                       Неверный код
                     </p>
                   )}

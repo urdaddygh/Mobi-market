@@ -1,13 +1,29 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { requests } from "../api";
+import axios from "axios";
+import { getCookie, setCookie } from "../../utils/cookieFunction/cookieFunction";
 
 const initialState = {
   error: false,
   likeErr: false,
+  likedErr:false,
+  getMyProductsErr:false,
   products: [],
   product: {},
   likedProducts: [],
+  myProducts:[]
 };
+
+let refresh = getCookie("refresh")
+axios.interceptors.response.use(resp=>resp, async error =>{
+  console.log(error, 'error')
+  let refresh = getCookie("refresh")
+  if(error.response.status===401){
+      const res = await requests.getRefreshToken({refresh:refresh})
+      setCookie("access", res.data.access)
+      return console.log(res, 'res')
+  }
+})
 
 export const getProducts = createAsyncThunk(
   "getProductsReducer/getProducts",
@@ -16,15 +32,34 @@ export const getProducts = createAsyncThunk(
       const res = await requests.getProducts(data);
       return res.data;
     } catch (err) {
-      throw new Error(err);
+      if(err.response.status===401){
+        console.log(refresh)
+        const res = await requests.getRefreshToken({refresh:refresh})
+        setCookie("access", res.data.access)
+        return console.log(res, 'res')
+    }
+      console.log(err.response.status)
+      
     }
   }
 );
 export const getLikedProducts = createAsyncThunk(
   "getProductsReducer/getLikedProducts",
-  async () => {
+  async (data) => {
     try {
-      const res = await requests.getProductsLiked();
+      const res = await requests.getProductsLiked(data);
+      return res.data;
+    } catch (err) {
+      throw new Error(console.log(err));
+    }
+  }
+);
+
+export const getMyProducts = createAsyncThunk(
+  "getProductsReducer/getMyProducts",
+  async (data) => {
+    try {
+      const res = await requests.getMyProducts(data);
       return res.data;
     } catch (err) {
       
@@ -32,6 +67,7 @@ export const getLikedProducts = createAsyncThunk(
     }
   }
 );
+
 export const getProductsById = createAsyncThunk(
   "getProductsReducer/getProductsById",
   async (data) => {
@@ -54,14 +90,29 @@ export const getProductsForPagination = createAsyncThunk(
     }
   }
 );
+export const getLikedProductsForPagination = createAsyncThunk(
+  "getProductsReducer/getLikedProductsForPagination",
+  async (data) => {
+    try {
+      const res = await requests.getLikedProductsForPagination(data);
+      return res.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
 export const likeProduct = createAsyncThunk(
   "getProductsReducer/likeProduct",
   async (data) => {
     try {
-      const res = await requests.likeProduct(data);
+      const res = await requests.likeProduct(data.value);
+      data.showSuccessMessage("Товар добавлен в понравившиеся")
+      console.log(res.data)
       return res.data;
     } catch (err) {
-      throw new Error(err);
+
+      data.showToastMessage("Подтвердите свой аккаунт пожалуйста")
+      throw new Error(console.log(err.response));
     }
   }
 );
@@ -69,13 +120,16 @@ export const unLikeProduct = createAsyncThunk(
   "getProductsReducer/unLikeProduct",
   async (data) => {
     try {
+      console.log(data)
       const res = await requests.unLikeProduct(data);
+      console.log(res.data)
       return res.data;
     } catch (err) {
       throw new Error(err);
     }
   }
 );
+
 
 
 const productsApiSlice = createSlice({
@@ -94,14 +148,25 @@ const productsApiSlice = createSlice({
     },
 
     [getLikedProducts.pending]: (state) => {
-      state.error = false;
+      state.likedErr = false;
     },
     [getLikedProducts.fulfilled]: (state,action) => {
       state.likedProducts = action.payload;
-      state.error = true;
+      state.likedErr = true;
     },
     [getLikedProducts.rejected]: (state) => {
-      state.error = false;
+      state.likedErr = false;
+    },
+
+    [getMyProducts.pending]: (state) => {
+      state.getMyProductsErr = false;
+    },
+    [getMyProducts.fulfilled]: (state,action) => {
+      state.myProducts = action.payload;
+      state.getMyProductsErr = true;
+    },
+    [getMyProducts.rejected]: (state) => {
+      state.getMyProductsErr = false;
     },
 
     [getProductsById.pending]: (state) => {
@@ -126,11 +191,21 @@ const productsApiSlice = createSlice({
       state.error = false;
     },
 
+    [getLikedProductsForPagination.pending]: (state) => {
+      state.error = false;
+    },
+    [getLikedProductsForPagination.fulfilled]: (state,action) => {
+      state.likedProducts = action.payload;
+      state.error = true;
+    },
+    [getLikedProductsForPagination.rejected]: (state) => {
+      state.error = false;
+    },
+
     [likeProduct.pending]: (state) => {
       state.likeErr = false;
     },
-    [likeProduct.fulfilled]: (state,action) => {
-      state.products = action.payload;
+    [likeProduct.fulfilled]: (state) => {
       state.likeErr = true;
     },
     [likeProduct.rejected]: (state) => {
@@ -140,8 +215,7 @@ const productsApiSlice = createSlice({
     [unLikeProduct.pending]: (state) => {
       state.likeErr = false;
     },
-    [unLikeProduct.fulfilled]: (state,action) => {
-      state.products = action.payload;
+    [unLikeProduct.fulfilled]: (state) => {
       state.likeErr = true;
     },
     [unLikeProduct.rejected]: (state) => {

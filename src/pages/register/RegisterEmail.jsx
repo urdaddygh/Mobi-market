@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BackToPrevBtn from "../../components/backToPrevBtn/BackToPrevBtn";
 
 function RegisterEmail() {
+  const [state, setState] = useState(false) 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -26,8 +27,6 @@ function RegisterEmail() {
     username: Yup.string().min(2).max(50).matches(/(?=.*[a-z])\w+/),
     email: Yup.string().email(),
   });
-
- 
 
   const formik = useFormik({
     validateOnChange: false,
@@ -52,9 +51,17 @@ function RegisterEmail() {
     },
   });
 
+  const disableBtn = ()=>{
+    if(!formik.values.email && !formik.values.username) return true
+    else if(formik.errors) return true
+    
+    return false
+  }
+
   useEffect(() => {
-    if (formik.errors.email) showToastMessage("Некорректная почта");
-    else if (formik.errors.username) showToastMessage("Неверное имя пользователя");
+    if (formik.errors.email && formik.errors.username ) showToastMessage("Неккоректное имя пользователя и почта");
+    else if (formik.errors.email) showToastMessage("Некорректная почта");
+    else if (formik.errors.username) showToastMessage("Имя пользователя должно содержать от 2 до 8 символов");
   }, [formik.errors]);
 
   return (
@@ -68,7 +75,7 @@ function RegisterEmail() {
         type="text"
         value={formik.values.username}
         onChange={formik.handleChange}
-        color={formik.errors.username ? "red" : ""}
+        color={formik.errors.username ? "red" : ''}
       />
       {/* {formik.errors.email&&showToastMessage()} */}
       <Input

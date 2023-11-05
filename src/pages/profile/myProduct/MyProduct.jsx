@@ -3,7 +3,7 @@ import BackToPrevBtn from '../../../components/backToPrevBtn/BackToPrevBtn'
 import s from './MyProduct.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
-import { getLikedProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
+import { getLikedProducts, getMyProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
 import { empty_icon, heart_icon, red_heart_icon } from '../../../Images';
 import Skeleton from '../../../components/skeleton/Skeleton';
 import { Pagination } from '../../../components/pagination/Pagination';
@@ -22,7 +22,7 @@ function MyProduct() {
     const dispatch = useDispatch();
   
     useEffect(() => {
-      dispatch(getProducts(1));
+      dispatch(getMyProducts(1));
     }, []);
   
     const showToastMessage = (data) => {
@@ -38,22 +38,23 @@ function MyProduct() {
       });
     };
   
-    const products = useSelector((state) => state.products.products);
+    const products = useSelector((state) => state.products.myProducts);
     const product = useSelector((state) => state.products.product);
-    const err = useSelector((state) => state.products.error);
-    const likeErr = useSelector((state) => state.products.likeErr);
-    console.log(likeErr);
+    const err = useSelector((state) => state.products.getMyProductsErr);
+    console.log(err);
 
     const likeProductById = (id, e) => {
       e.stopPropagation();
-      dispatch(likeProduct(id));
-      if (!likeErr) showToastMessage("Подтвердите свой аккаунт пожалуйста");
+      let data = {value:{product:id}, showToastMessage, showSuccessMessage}
+      dispatch(likeProduct(data));
+    dispatch(getMyProducts(products.page))
     };
 
     const unLikeProductById = (id, e) => {
       e.stopPropagation();
       setSecondModalActive(false)
       dispatch(unLikeProduct(id));
+      dispatch(getMyProducts(products.page))
     };
 
     const getProductForModal = (data) => {
@@ -99,13 +100,15 @@ function MyProduct() {
               <Skeleton count={16} />
             )}
           </div>
+          {products?.count >2&&
           <Pagination
             page={products.page}
             next={products.next}
             previous={products.previous}
             take={getProductsForPagination}
             takeTwo={getProducts}
-          />
+            count={products.count}
+          />}
         </>
       ) : (
         <img src={empty_icon} className={s.empty_icon} />

@@ -19,7 +19,19 @@ export const updateUserInfo = createAsyncThunk(
       return res.data;
     } catch (err) {
         console.log(err.date)
-      data.showToErrMessage("dsadsadsadas");
+      data.showToErrMessage("Некорректные данные");
+      throw new Error(err);
+    }
+  }
+);
+
+export const getInfoOfUser = createAsyncThunk(
+  "profile/getInfoOfUser",
+  async () => {
+    try {
+      const res = await requests.getInfoOfUser();
+      return res.data;
+    } catch (err) {
       throw new Error(err);
     }
   }
@@ -38,6 +50,19 @@ const profileSlice = createSlice({
       state.error = false;
     },
     [updateUserInfo.rejected]: (state) => {
+      // console.log(action)
+      state.error = true;
+    },
+
+    [getInfoOfUser.pending]: (state) => {
+      state.error = false;
+      // console.log(action)
+    },
+    [getInfoOfUser.fulfilled]: (state, action) => {
+      state.user = action.payload;
+      state.error = false;
+    },
+    [getInfoOfUser.rejected]: (state) => {
       // console.log(action)
       state.error = true;
     },
