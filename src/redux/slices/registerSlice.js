@@ -4,13 +4,29 @@ import {requests} from "../api";
 
 const initialState = {
     error: false,
+    isRegister:{}
 };
 
-export const registerEmail = createAsyncThunk(
-    'register/registerEmail',
-     (data) => {
-        console.log(data)
-        return data;
+export const checkUserApi = createAsyncThunk(
+    'register/checkUserApi',
+     async(data) => {
+        try {
+            const res = await requests.checkUser(data.values);
+            localStorage.setItem("email", JSON.stringify(data.values));
+
+            if(res.data.email){
+                data.showToastMessage("Данная почта уже зарегистрирована")
+            }
+            if(res.data.username){
+                data.showToastMessage("Данное имя пользователя уже занято")
+            }
+            if(!res.data.username && !res.data.email) data.navigate("/register/password")
+            return res.data;
+        } catch (error) {
+                data.showToastMessage("Некорректная почта")
+                console.log(error.response)
+            throw new Error(error)
+        }
     }
 );
 
@@ -18,38 +34,31 @@ export const registerEmail = createAsyncThunk(
 export const postRegister = createAsyncThunk(
     'register/postRegister',
     async (data) => {
-        // localStorage.removeItem('access')
         const res = await requests.registerApi(data.data);
         localStorage.setItem("access", res.data.access)
-        // console.log("access", res.data); 
         data.navigate('/')
         data.showToSuccessMessage("Успех!")
-        // localStorage.setItem('user_id', res.data.user_id)
 
         return res.data;
     }
 );
 
-// export const changePass = createAsyncThunk(
-//     'auth/changePass',
-//     async (data) => {
-//         console.log("dsadsa", data)
-//         const res = await requests.changePass(data.value);
-
-//         console.log("change", res.data);
-//         data.handleOpenSuccessModal()
-//         return res.data;
-//     }
-// );
-
 const registerSlice = createSlice({
     name: 'register',
     initialState,
     extraReducers: {
-        [registerEmail.pending]: (state) => {
+        [checkUserApi.pending]: (state) => {
             // console.log(action)
+            state.error = false;
+        },
+        [checkUserApi.fulfilled]: (state, action) => {
+            state.isRegister = action.payload
             state.error = true;
         },
+        [checkUserApi.rejected]: (state) => {
+            state.error = false;
+        },
+        
         [postRegister.pending]: (state, action) => {
             console.log(action)
             state.error = true;

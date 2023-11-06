@@ -59,7 +59,15 @@ function NavBar({ name, username, className }) {
       </div>
       <div className={s.navbar}>
         <NavLink
-          to="/profile/liked"
+          to={
+            userInfo.email &&
+            userInfo.birth_date &&
+            userInfo.first_name &&
+            userInfo.last_name &&
+            userInfo.phone
+              ? "/profile/liked"
+              : "/profile/profilePage"
+          }
           className={
             userInfo.email &&
             userInfo.birth_date &&
@@ -75,14 +83,22 @@ function NavBar({ name, username, className }) {
           <img src={vector_icon} alt="" className={s.vector} />
         </NavLink>
         <NavLink
-          to="/profile/myProducts"
+          to={
+            userInfo.email &&
+            userInfo.birth_date &&
+            userInfo.first_name &&
+            userInfo.last_name &&
+            userInfo.phone
+              ? "/profile/myProducts"
+              : "/profile/profilePage"
+          }
           className={
             userInfo.email &&
             userInfo.birth_date &&
             userInfo.first_name &&
             userInfo.last_name &&
             userInfo.phone
-              ? linkActiveClassName("myProduct")
+              ? linkActiveClassName("myProducts")
               : s.unactive
           }
         >

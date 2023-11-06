@@ -106,11 +106,11 @@ function ProfilePage() {
             placeholder="Имя"
             readOnly={
               (
-                formik.values.email &&
-                formik.values.birth_date &&
-                formik.values.first_name &&
-                formik.values.last_name &&
-                formik.values.username
+                userInfo.email &&
+          userInfo.birth_date &&
+          userInfo.first_name &&
+          userInfo.last_name &&
+          userInfo.username
               )
             }
           />
@@ -123,11 +123,11 @@ function ProfilePage() {
             placeholder="Фамилия"
             readOnly={
               (
-                formik.values.email &&
-                formik.values.birth_date &&
-                formik.values.first_name &&
-                formik.values.last_name &&
-                formik.values.username
+                userInfo.email &&
+          userInfo.birth_date &&
+          userInfo.first_name &&
+          userInfo.last_name &&
+          userInfo.username
               )
             }
           />
@@ -140,11 +140,11 @@ function ProfilePage() {
             placeholder="Имя пользователя"
             readOnly={
               (
-                formik.values.email &&
-                formik.values.birth_date &&
-                formik.values.first_name &&
-                formik.values.last_name &&
-                formik.values.username
+                userInfo.email &&
+          userInfo.birth_date &&
+          userInfo.first_name &&
+          userInfo.last_name &&
+          userInfo.username
               )
             }
           />
@@ -157,11 +157,11 @@ function ProfilePage() {
             placeholder="Дата рождения"
             readOnly={
               (
-                formik.values.email &&
-                formik.values.birth_date &&
-                formik.values.first_name &&
-                formik.values.last_name &&
-                formik.values.username
+                userInfo.email &&
+          userInfo.birth_date &&
+          userInfo.first_name &&
+          userInfo.last_name &&
+          userInfo.username
               )
             }
           />
@@ -187,11 +187,11 @@ function ProfilePage() {
           placeholder="Почта"
           readOnly={
             (
-              formik.values.email &&
-              formik.values.birth_date &&
-              formik.values.first_name &&
-              formik.values.last_name &&
-              formik.values.username
+              userInfo.email &&
+          userInfo.birth_date &&
+          userInfo.first_name &&
+          userInfo.last_name &&
+          userInfo.username
             )
           }
         />

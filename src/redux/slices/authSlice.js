@@ -8,7 +8,8 @@ import { requests } from "../api";
 const initialState = {
   error: false,
   user: {},
-  verifyErr:false
+  verifyErr:false,
+  access:{}
 };
 
 export const postAuth = createAsyncThunk("auth/postAuth", async (data) => {
@@ -49,6 +50,7 @@ export const resetPassApi = createAsyncThunk(
     try {
       const res = await requests.resetPassApi(data);
       console.log("change", res.data);
+      localStorage.setItem("access", res.data.access);
       data.allRight();
       return res.data;
     } catch (error) {
@@ -173,6 +175,17 @@ const authSlice = createSlice({
       state.password = action.payload;
     },
     [changeErr.rejected]: (state) => {
+      state.error = true;
+    },
+
+    [resetPassApi.pending]: (state) => {
+      state.error = false;
+    },
+    [resetPassApi.fulfilled]: (state, action) => {
+      state.error = false;
+      state.access = action.payload;
+    },
+    [resetPassApi.rejected]: (state) => {
       state.error = true;
     },
 

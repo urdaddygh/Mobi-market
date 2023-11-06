@@ -4,8 +4,8 @@ import Input from "../../components/input/Input";
 import s from "./styles.module.css";
 import Button from "../../components/button/Button";
 import { useNavigate } from "react-router-dom";
-import { registerEmail } from "../../redux/slices/registerSlice";
-import { useDispatch } from "react-redux";
+import { checkUserApi, registerEmail } from "../../redux/slices/registerSlice";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +15,8 @@ function RegisterEmail() {
   const [state, setState] = useState(false) 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const isRegister = useSelector(state=>state.register.isRegister)
+  console.log(isRegister)
   const showToastMessage = (data) => {
     toast.error(data, {
       position: toast.POSITION.TOP_CENTER,
@@ -38,16 +39,17 @@ function RegisterEmail() {
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       // console.log(formik.errors.email);
-      // let data = { values, navigate };
-      console.log(formik.errors.email,"dsa");
-      if (formik.errors.email) {
-        showToastMessage();
-      } else {
-        console.log(formik.errors);
-        dispatch(registerEmail(false));
-        localStorage.setItem("email", JSON.stringify(values));
-        navigate("/register/password");
-      }
+      let data = { values, navigate, showToastMessage,  };
+      console.log(data);
+      dispatch(checkUserApi(data));
+      // if(isRegister.email) {
+      //   showToastMessage("Данная почта уже зарегистрирована")
+      // }
+      // if(isRegister.username){
+      //   showToastMessage("Данное имя пользователя уже занято")
+      // }
+        // localStorage.setItem("email", JSON.stringify(values));
+        // navigate("/register/password");
     },
   });
 
@@ -75,7 +77,7 @@ function RegisterEmail() {
         type="text"
         value={formik.values.username}
         onChange={formik.handleChange}
-        color={formik.errors.username ? "red" : ''}
+        color={formik.errors.username || isRegister.username ? "red" : ''}
       />
       {/* {formik.errors.email&&showToastMessage()} */}
       <Input
@@ -86,7 +88,7 @@ function RegisterEmail() {
         value={formik.values.email}
         onChange={formik.handleChange}
         margin="47px 0 0 0"
-        color={formik.errors.email ? "red": ""}
+        color={formik.errors.email || isRegister.email ? "red": ""}
       />
       <Button
         text="Далее"
