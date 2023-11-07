@@ -45,7 +45,6 @@ function ModalForPhone({ modalActive, setModalActive, onClick }) {
     onSubmit: (values) => {
       let data = { values, onClick,showErrMessage };
       dispatch(forgotPassword(data));
-      console.log(values);
     },
   });
 

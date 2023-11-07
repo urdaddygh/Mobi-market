@@ -3,8 +3,11 @@ import s from "./Header.module.css";
 import { profile_icon, shop_icon } from "../../Images";
 import Button from "../button/Button";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateProfilePage } from "../../redux/slices/profileSlice";
 
 function Header({name, username, onClick, to}) {
+  const dispatch = useDispatch()
   return (
     <header>
       <div className={s.icon}>
@@ -17,7 +20,7 @@ function Header({name, username, onClick, to}) {
           <h6>{name}</h6>
           <p>{username}</p>
         </span>
-        <NavLink to={to} className={s.cont_profile} >
+        <NavLink to={to} className={s.cont_profile} onClick={()=>dispatch(updateProfilePage("good"))}>
           <img src={profile_icon} alt="" />
         </NavLink>       
       </div>

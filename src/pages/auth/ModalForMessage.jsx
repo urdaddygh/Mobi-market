@@ -39,14 +39,7 @@ function ModalForMessage({
     // validationSchema: SignupSchema,
     onSubmit: (values) => {
       let data = {allRight, showErrMessage, values, id:user.user_id}
-      console.log(data)
       dispatch(resetPassApi(data))
-      if (values.message === "1991") {
-        setState(false);
-        allRight()
-      } else {
-        setState(true);
-      }
     },
   });
 

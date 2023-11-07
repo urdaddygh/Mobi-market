@@ -46,7 +46,9 @@ function LikedProduct() {
   const products = useSelector((state) => state.products.likedProducts);
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products.likedErr);
+  const mes = useSelector(state=>state.products.message)
   console.log(products);
+
   useEffect(() => {
     dispatch(getLikedProducts(1));
   }, []);
@@ -62,7 +64,6 @@ function LikedProduct() {
     setSecondModalActive(false)
     console.log(id)
     dispatch(unLikeProduct(id));
-    dispatch(getLikedProducts(products.page))
   };
   const openDeleteModal=(e, id)=>{
     e.stopPropagation();
@@ -73,6 +74,10 @@ function LikedProduct() {
     dispatch(getProductsById(data));
     setModalActive(true);
   };
+
+  useEffect(() => {
+    dispatch(getLikedProducts(products?.page));
+  }, [mes]);
 
   return (
     <>

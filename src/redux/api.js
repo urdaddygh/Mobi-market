@@ -5,10 +5,18 @@ const access = getCookie("access")
 
 const acc = localStorage.getItem("access")
 
+console.log(acc)
 const fetchAPI = axios.create({
     baseURL: "https://neobook.online/mobi-market/",
     headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${access}`,
+    },
+});
+const fetchAPIImage = axios.create({
+    baseURL: "https://neobook.online/mobi-market/",
+    headers: {
+        "Content-type": "multipart/form-data",
         Authorization: `Bearer ${access}`,
     },
 });
@@ -49,5 +57,6 @@ export const requests = {
     getProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     getLikedProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     likeProduct:(data)=>fetchAPI.post("products/like/", data),
+    addProduct:(data)=>fetchAPIImage.post("products/", data),
     unLikeProduct:(data)=>fetchAPI.delete(`products/unlike/${data}`, ),
 }

@@ -31,12 +31,13 @@ function Auth() {
     setThirdModalActive(true)
     setSecondModalActive(false)
   }
-  console.log(authErr,"current");
+  // console.log(authErr,"current");
 
   const showToErrMessage = (text) => {
     toast.error(text, {
       position: toast.POSITION.TOP_CENTER,
       className: "popup",
+      toastId:"popup"
     });
   };
   const toggle = () => {

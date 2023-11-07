@@ -7,6 +7,7 @@ import { Preloader, Oval } from "react-preloader-icon";
 import { useDispatch, useSelector } from "react-redux";
 import { verifyPhoneApi } from "../../../redux/slices/authSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { getInfoOfUser } from "../../../redux/slices/profileSlice";
 
 function ModalForMessage({
   secondmodalActive,
@@ -38,7 +39,7 @@ function ModalForMessage({
     }, 1000);
   }, [count, secondmodalActive]);
   
-  console.log(count)
+  // console.log(count)
 
   const formik = useFormik({
     validateOnChange: false,
@@ -51,6 +52,7 @@ function ModalForMessage({
     onSubmit: (values) => {
       let data={values, showSuccessMessage, setState, setSecondModalActive}
       dispatch(verifyPhoneApi(data))
+      dispatch(getInfoOfUser())
     },
   });
   return (

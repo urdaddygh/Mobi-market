@@ -11,7 +11,8 @@ const initialState = {
   products: [],
   product: {},
   likedProducts: [],
-  myProducts:[]
+  myProducts:[],
+  message:{}
 };
 
 let refresh = getCookie("refresh")
@@ -48,6 +49,19 @@ export const getLikedProducts = createAsyncThunk(
   async (data) => {
     try {
       const res = await requests.getProductsLiked(data);
+      return res.data;
+    } catch (err) {
+      throw new Error(console.log(err));
+    }
+  }
+);
+
+export const addProduct = createAsyncThunk(
+  "getProductsReducer/addProduct",
+  async (data) => {
+    try {
+      const res = await requests.addProduct(data.values);
+      data.showSuccessMessage("Товар добавлен")
       return res.data;
     } catch (err) {
       throw new Error(console.log(err));
@@ -107,10 +121,8 @@ export const likeProduct = createAsyncThunk(
     try {
       const res = await requests.likeProduct(data.value);
       data.showSuccessMessage("Товар добавлен в понравившиеся")
-      console.log(res.data)
       return res.data;
     } catch (err) {
-
       data.showToastMessage("Подтвердите свой аккаунт пожалуйста")
       throw new Error(console.log(err.response));
     }
@@ -130,16 +142,22 @@ export const unLikeProduct = createAsyncThunk(
   }
 );
 
-
+export const clearStateProduct = createAsyncThunk("getProductsReducer/clearState", () => {
+  return 
+});
 
 const productsApiSlice = createSlice({
   name: "getProductsReducer",
   initialState,
   extraReducers: {
+    [clearStateProduct.fulfilled]: (state) => {
+      state = initialState
+    },
     [getProducts.pending]: (state) => {
       state.error = false;
     },
     [getProducts.fulfilled]: (state,action) => {
+      state.products = []
       state.products = action.payload;
       state.error = true;
     },
@@ -205,7 +223,8 @@ const productsApiSlice = createSlice({
     [likeProduct.pending]: (state) => {
       state.likeErr = false;
     },
-    [likeProduct.fulfilled]: (state) => {
+    [likeProduct.fulfilled]: (state, action) => {
+      state.message = action.payload
       state.likeErr = true;
     },
     [likeProduct.rejected]: (state) => {
@@ -215,7 +234,8 @@ const productsApiSlice = createSlice({
     [unLikeProduct.pending]: (state) => {
       state.likeErr = false;
     },
-    [unLikeProduct.fulfilled]: (state) => {
+    [unLikeProduct.fulfilled]: (state, action) => {
+      state.message = {message:"good!"}
       state.likeErr = true;
     },
     [unLikeProduct.rejected]: (state) => {

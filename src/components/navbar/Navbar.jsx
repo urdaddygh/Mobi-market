@@ -13,9 +13,11 @@ import { removeCookie } from "../../utils/cookieFunction/cookieFunction";
 import { Modal } from "../modal/Modal";
 import Button from "../button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { getInfoOfUser } from "../../redux/slices/profileSlice";
+import { clearStateProfile, getInfoOfUser } from "../../redux/slices/profileSlice";
+import { clearState, clearStateProduct } from "../../redux/slices/productsApiSlice";
+import { clearStateAuth } from "../../redux/slices/authSlice";
 
-function NavBar({ name, username, className }) {
+function NavBar({ name, username, className, first_name }) {
   const location = useLocation();
   const [active, setActive] = useState(false);
   const navigate = useNavigate();
@@ -41,6 +43,9 @@ function NavBar({ name, username, className }) {
     removeCookie("access");
     removeCookie("refresh");
     navigate("/");
+    dispatch(clearStateAuth())
+    dispatch(clearStateProduct())
+    dispatch(clearStateProfile())
   };
   return (
     <div className={className}>

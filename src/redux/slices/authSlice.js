@@ -59,6 +59,7 @@ export const resetPassApi = createAsyncThunk(
     }
   }
 );
+
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (data) => {
@@ -118,7 +119,9 @@ export const changePass = createAsyncThunk("auth/changePass", async (data) => {
 export const changeErr = createAsyncThunk("auth/changeErr", (data) => {
   return data;
 });
-
+export const clearStateAuth = createAsyncThunk("auth/clearState", (data) => {
+  return data;
+});
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -167,6 +170,10 @@ const authSlice = createSlice({
       state.error = true;
     },
 
+    [clearStateAuth.fulfilled]: (state) => {
+      state = initialState;
+    },
+    
     [changeErr.pending]: (state) => {
       state.error = false;
     },

@@ -16,7 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ModalForProduct from "../../components/modalForProduct/ModalForProduct";
 import ModalForAddProduct from "../../components/modalForAddProduct/ModalForAddProduct";
 import { ModalForCancel } from "../../components/modalForCancel/ModalForCancel";
-import { getInfoOfUser } from "../../redux/slices/profileSlice";
+import { getInfoOfUser, updateProfilePage } from "../../redux/slices/profileSlice";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 
 function MainPage() {
@@ -25,9 +25,7 @@ function MainPage() {
   const [secondModalActive, setSecondModalActive] = useState(false);
   const [cancelModalActive, setCancelModalActive] = useState(false);
   const [deleteModalActive, setDeleteModalActive] = useState(false)
-  const dispatch = useDispatch();
-
- 
+  const dispatch = useDispatch(); 
 
   const showToastMessage = (data) => {
     toast.error(data, {
@@ -35,6 +33,7 @@ function MainPage() {
       className: "popup",
     });
   };
+  
   const showSuccessMessage = (data) => {
     toast.success(data, {
       position: toast.POSITION.TOP_CENTER,
@@ -44,15 +43,18 @@ function MainPage() {
 
   const products = useSelector((state) => state.products.products);
   const product = useSelector((state) => state.products.product);
-  const err = useSelector((state) => state.products.error);
+  const err = useSelector((state) => state.products);
   const userInfo = useSelector((state) => state.profile.user);
-  console.log(products);
+  const mes = useSelector(state=>state.products?.message)
+  console.log(mes);
 
   const likeProductById = (id, e) => {
     e.stopPropagation();
     let data = {value:{product:id}, showToastMessage, showSuccessMessage}
     dispatch(likeProduct(data));
-    dispatch(getProducts(products.page))
+    setDeleteModalActive(false)
+    setModalActive(false)
+    // dispatch(getProducts(products.page))
     // window.location.reload();
     setState({})
   };
@@ -60,8 +62,10 @@ function MainPage() {
   const unLikeProductById = (id, e) => {
     e.stopPropagation();
     setSecondModalActive(false)
+    setModalActive(false)
+    setDeleteModalActive(false)
     dispatch(unLikeProduct(id));
-    dispatch(getProducts(products.page))
+    // dispatch(getProducts(products.page))
     setState({})
   };
 
@@ -88,8 +92,9 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
+    dispatch(getProducts(products.page))
     
-  }, [products]);
+  }, [mes]);
 
   return (
     <main>
@@ -101,7 +106,7 @@ function MainPage() {
         to="/profile/profilePage"
       />
       <section className={s.first_section}>
-        {err ? (
+        {err?.error ? (
           products?.results.map((el) => (
             <div
               className={s.product_card}

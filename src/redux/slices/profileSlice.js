@@ -7,6 +7,7 @@ import { requests } from "../api";
 const initialState = {
   error: false,
   user: {},
+  message:{}
 };
 
 export const updateUserInfo = createAsyncThunk(
@@ -16,6 +17,8 @@ export const updateUserInfo = createAsyncThunk(
     try {
       const res = await requests.updateUserInfo(data.values);
       data.showSuccessMessage("Данные успешно изменены")
+      data.setState(false)
+      window.location.reload()
       return res.data;
     } catch (err) {
         console.log(err.date)
@@ -36,11 +39,22 @@ export const getInfoOfUser = createAsyncThunk(
     }
   }
 );
-
+export const clearStateProfile = createAsyncThunk("profile/clearState", () => {
+  return 
+});
+export const updateProfilePage = createAsyncThunk("profile/clearState", (data) => {
+  return data
+});
 const profileSlice = createSlice({
   name: "profile",
   initialState,
   extraReducers: {
+    [updateProfilePage.fulfilled]: (state, action) => {
+      state.message=action.payload
+    },
+    [clearStateProfile.fulfilled]: (state) => {
+      state=initialState
+    },
     [updateUserInfo.pending]: (state) => {
       state.error = false;
       // console.log(action)

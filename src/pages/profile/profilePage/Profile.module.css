@@ -173,3 +173,17 @@ align-items: center;
     margin-top: 16px;
     text-align: center;
 }
+.ready{
+    position: absolute;
+    right: 137px;
+    top: 23px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    width: 74px;
+    height: 28px;
+    cursor: pointer;
+    background-color: #C0C0C0;
+}
