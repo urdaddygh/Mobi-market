@@ -10,6 +10,10 @@
     cursor: pointer;
     align-items: center;
 }
+.img{
+    width: 532px;
+    height: 320px;
+}
 .cont h4{
     margin-top: 24px;
     margin-bottom: 12px;
@@ -51,3 +55,26 @@
     color: #494949;
     margin-bottom: 12px;
 }
+.controls.dot-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  .controls .dot-group .carousel__dot {
+    width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin: 0 4px;
+      background-color: red;
+  }
+
+    /* This class is found in DotGroup from pure-react-carousel */
+    /* We need to override it to add our styles */
+    .carousel__dot--selected {
+      width: 16px;
+      height: 8px;
+      border-radius: 10px;
+      background-color: #6267a1;
+      transition: background 0.4s ease;
+    }

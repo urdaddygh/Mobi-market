@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import s from "./MainPage.module.css";
 import Header from "../../components/header/Header";
 import { heart_icon, img, liked_icon, red_heart_icon } from "../../Images";
@@ -20,7 +20,6 @@ import { getInfoOfUser, updateProfilePage } from "../../redux/slices/profileSlic
 import DeleteModal from "../../components/deleteModal/DeleteModal";
 
 function MainPage() {
-  const [state, setState] = useState()
   const [modalActive, setModalActive] = useState(false);
   const [secondModalActive, setSecondModalActive] = useState(false);
   const [cancelModalActive, setCancelModalActive] = useState(false);
@@ -41,22 +40,22 @@ function MainPage() {
     });
   };
 
+  const updatePage=()=>{
+    dispatch(getProducts(products.page))
+  }
+
   const products = useSelector((state) => state.products.products);
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products);
   const userInfo = useSelector((state) => state.profile.user);
-  const mes = useSelector(state=>state.products?.message)
-  console.log(mes);
+  // console.log(products);
 
   const likeProductById = (id, e) => {
     e.stopPropagation();
-    let data = {value:{product:id}, showToastMessage, showSuccessMessage}
+    let data = {value:{product:id}, showToastMessage, showSuccessMessage, updatePage}
     dispatch(likeProduct(data));
     setDeleteModalActive(false)
     setModalActive(false)
-    // dispatch(getProducts(products.page))
-    // window.location.reload();
-    setState({})
   };
 
   const unLikeProductById = (id, e) => {
@@ -64,9 +63,8 @@ function MainPage() {
     setSecondModalActive(false)
     setModalActive(false)
     setDeleteModalActive(false)
-    dispatch(unLikeProduct(id));
-    // dispatch(getProducts(products.page))
-    setState({})
+    let data = {id, updatePage}
+    dispatch(unLikeProduct(data));
   };
 
   const getProductForModal = (data) => {
@@ -91,11 +89,6 @@ function MainPage() {
     dispatch(getInfoOfUser())
   }, []);
 
-  useEffect(() => {
-    dispatch(getProducts(products.page))
-    
-  }, [mes]);
-
   return (
     <main>
       <ToastContainer />
@@ -113,7 +106,7 @@ function MainPage() {
               key={el.id}
               onClick={() => getProductForModal(el.id)}
             >
-              <img src={el.image} alt="" width="142px" height="85px" />
+              <img src={el.images[0].image} alt="" width="142px" height="85px" />
               <h4>{el.name}</h4>
               <p>{el.price}</p>
               <div className={s.heart_icon}>
@@ -135,7 +128,7 @@ function MainPage() {
           <Skeleton count={2} />
         )}
       </section>
-      {products?.count > 2 && (
+      {products?.count > 3 && (
         <div className={s.pagination_cont}>
           <Pagination
             page={products?.page}
@@ -153,7 +146,7 @@ function MainPage() {
         setActive={setModalActive}
         full_description={product.full_description}
         id={product.id}
-        image={product.image}
+        image={product?.images}
         likeProductById={likeProductById}
         like_count={product.like_count}
         liked_by_current_user={product.liked_by_current_user}
@@ -166,6 +159,7 @@ function MainPage() {
       />
       <ModalForAddProduct
         active={secondModalActive}
+        setActiveSuccess={setSecondModalActive}
         setActive={() => setCancelModalActive(true)}
         closeModal={() => setCancelModalActive(true)}
       />

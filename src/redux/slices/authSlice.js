@@ -17,11 +17,9 @@ export const postAuth = createAsyncThunk("auth/postAuth", async (data) => {
   removeCookie("refresh");
   try {
     const res = await requests.authApi(data.values);
-    //   if(res.data)
     setCookie("access", res.data.access);
     setCookie("refresh", res.data.refresh);
     data.navigate("/main");
-    // localStorage.setItem('user_id', res.data.user_id)
     return res.data;
   } catch (err) {
     data.showToErrMessage("Неверный логин или пароль ");

@@ -9,18 +9,19 @@ import Skeleton from '../../../components/skeleton/Skeleton';
 import { Pagination } from '../../../components/pagination/Pagination';
 import ModalForProduct from '../../../components/modalForProduct/ModalForProduct';
 import DeleteModal from '../../../components/deleteModal/DeleteModal';
+import ModalForChangeProduct from '../../../components/modalForChangeProduct/ModalForChangeProduct';
 function MyProduct() {
 
     const [modalActive, setModalActive] = useState(false);
     const [secondModalActive, setSecondModalActive] = useState(false);
     const [cancelModalActive, setCancelModalActive] = useState(false);
-
+    const [isChanging, setIsChanging] = useState(false)
     const activeModal =()=>{
       setSecondModalActive(false)
       setModalActive(true)
     }
     const dispatch = useDispatch();
-  
+    
     useEffect(() => {
       dispatch(getMyProducts(1));
     }, []);
@@ -32,7 +33,7 @@ function MyProduct() {
       });
     };
     const showSuccessMessage = (data) => {
-      toast.error(data, {
+      toast.success(data, {
         position: toast.POSITION.TOP_CENTER,
         className: "popup",
       });
@@ -43,24 +44,38 @@ function MyProduct() {
     const err = useSelector((state) => state.products.getMyProductsErr);
     console.log(err);
 
+    const updatePage = ()=>{
+      dispatch(getMyProducts(products.page))
+    }
+
     const likeProductById = (id, e) => {
       e.stopPropagation();
-      let data = {value:{product:id}, showToastMessage, showSuccessMessage}
+      let data = {value:{product:id}, showToastMessage, showSuccessMessage, updatePage}
       dispatch(likeProduct(data));
-    dispatch(getMyProducts(products.page))
     };
 
     const unLikeProductById = (id, e) => {
       e.stopPropagation();
       setSecondModalActive(false)
-      dispatch(unLikeProduct(id));
-      dispatch(getMyProducts(products.page))
+      let data = {id, updatePage}
+      dispatch(unLikeProduct(data));
     };
 
     const getProductForModal = (data) => {
       dispatch(getProductsById(data));
       setModalActive(true);
     };
+
+    const openDeleteModal=(id, e)=>{
+      e.stopPropagation();
+      dispatch(getProductsById(id))
+      setSecondModalActive(true)
+    }
+
+    const closeModal = ()=>{
+      setModalActive(false)
+      setIsChanging(false)
+    }
   return (
     <>
       <ToastContainer />
@@ -76,7 +91,7 @@ function MyProduct() {
                   key={index}
                   onClick={() => getProductForModal(el.id)}
                 >
-                  <img src={el.image} alt="" width="142px" height="85px" />
+                  <img src={el.images[0].image} alt="" width="142px" height="85px" />
                   <h4>{el.name}</h4>
                   <p>{el.price}</p>
                   <div className={s.heart_icon}>
@@ -87,7 +102,7 @@ function MyProduct() {
                       alt=""
                       onClick={
                         el.liked_by_current_user
-                          ? ()  => setSecondModalActive(true)
+                          ? (e) => openDeleteModal(el.id, e)
                           : (e) => likeProductById(el.id, e)
                       }
                       className={s.heart}
@@ -100,7 +115,7 @@ function MyProduct() {
               <Skeleton count={16} />
             )}
           </div>
-          {products?.count >2&&
+          {products?.count >3&&
           <Pagination
             page={products.page}
             next={products.next}
@@ -113,21 +128,19 @@ function MyProduct() {
       ) : (
         <img src={empty_icon} className={s.empty_icon} />
       )}
-      <ModalForProduct
+      <ModalForChangeProduct
         active={modalActive}
-        setActive={setModalActive}
+        setActive={closeModal}
         full_description={product.full_description}
         id={product.id}
-        image={product.image}
-        likeProductById={likeProductById}
-        unLikeProductById={setSecondModalActive}
-        phone_number={product.phone_number}
-        like_count={product.like_count}
-        liked_by_current_user={product.liked_by_current_user}
+        image={product.images}
         name={product.name}
         price={product.price}
         short_description={product.short_description}
-        closeModal={() => setModalActive(false)}
+        closeModal={closeModal}
+        isChanging={isChanging}
+        setIsChanging={setIsChanging}
+        myProductsPage={products.page}
       />
       <DeleteModal
         acitve={secondModalActive}

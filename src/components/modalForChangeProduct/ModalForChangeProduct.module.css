@@ -6,21 +6,12 @@
     height: 24px;
     display: flex;
     justify-content: center;
+    cursor: pointer;
     align-items: center;
-    cursor: pointer;
 }
 
-.input_img {
-    background-image: url(../../Images/addImg.png);
-    width: 76px;
-    height: 96px;
-    cursor: pointer;
-    margin-bottom: 16px;
-    margin-right: 16px;
-}
-
-.input_img::file-selector-button {
-    visibility: hidden;
+.main_img {
+    border-radius: 10px;
 }
 
 .input {
@@ -31,29 +22,31 @@
     color: #494949;
     margin-top: 8px;
 }
-
-.input::placeholder {
-    opacity: 50%;
-}
-
-.button {
+.cont_btn{
     display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin: 0 auto;
-    width: 280px;
-    height: 44px;
-    background-color:#5D5FEF;
-    border-radius: 16px;
+    flex-direction: row;
+    justify-content: space-evenly;
     margin-top: 24px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
 }
-.button:disabled{
-    background-color:#F7F6F9;
-    color: #9CA4AB;
+.cont_btn button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5D5FEF;
+    width: 260px;
+    height: 44px;
+    font-weight: 700;
+    color: white;
+    border-radius: 10px;
+}
+.cont_btn span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:#F34545;
+    font-weight: 700;
+    width: 260px;
+    cursor: pointer;
 }
 .flex{
     display: flex;
@@ -64,6 +57,7 @@
 .cont_img{
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 .div_img{
     max-width: 76px;
@@ -86,4 +80,16 @@ position: absolute;
 right: 8px;
 bottom: 6px;
 cursor: pointer;
+}
+.input_img {
+    background-image: url(../../Images/addImg.png);
+    width: 96px;
+    height: 96px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    margin-right: 16px;
+    background-repeat: no-repeat;
+}
+.input_img::file-selector-button {
+    visibility: hidden;
 }

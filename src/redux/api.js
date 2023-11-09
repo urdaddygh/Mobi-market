@@ -50,13 +50,15 @@ export const requests = {
     updateUserInfo:(data)=>fetchAPI.put("users/profile/update/", data),
     getInfoOfUser:()=>fetchAPI.get(`users/me/`),
 
-    getProducts:(data)=>fetchAPI.get(`products/?page=${data}&limit=2`),
+    getProducts:(data)=>fetchAPI.get(`products/?page=${data}&limit=3`),
     getProductsById:(data)=>fetchAPI.get(`products/${data}/`),
-    getProductsLiked:(data)=>fetchAPI.get(`products/liked/?page=${data}&limit=2`),
-    getMyProducts:(data)=>fetchAPI.get(`products/my-products/?page=${data}&limit=2`),
+    getProductsLiked:(data)=>fetchAPI.get(`products/liked/?page=${data}&limit=3`),
+    getMyProducts:(data)=>fetchAPI.get(`products/my-products/?page=${data}&limit=3`),
     getProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     getLikedProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     likeProduct:(data)=>fetchAPI.post("products/like/", data),
+    changeProduct:(data)=>fetchAPI.put(`products/${data.id}/`, data.values),
+    deleteProduct:(data)=>fetchAPI.delete(`products/${data}/`),
     addProduct:(data)=>fetchAPIImage.post("products/", data),
     unLikeProduct:(data)=>fetchAPI.delete(`products/unlike/${data}`, ),
 }

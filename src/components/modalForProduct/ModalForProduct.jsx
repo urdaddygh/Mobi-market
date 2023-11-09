@@ -2,11 +2,21 @@ import React from "react";
 import { Modal } from "../modal/Modal";
 import { cross_icon, heart_icon, red_heart_icon } from "../../Images";
 import s from "./ModalForProduct.module.css";
+import {
+  CarouselProvider,
+  Slider,
+  Slide,
+  ButtonBack,
+  ButtonNext,
+  Image,
+  DotGroup,
+} from "pure-react-carousel";
+import CarouselSlider from "../carousel/CarouselSlider";
 
 const ModalForProduct = ({
   active,
   setActive,
-  image,
+  image = [],
   price,
   phone_number,
   like_count,
@@ -17,14 +27,23 @@ const ModalForProduct = ({
   likeProductById,
   full_description,
   closeModal,
-  deleteModalActive
+  deleteModalActive,
 }) => {
   return (
     <Modal active={active} setActive={setActive} width="564px" height="90%">
       <div className={s.cross_icon} onClick={closeModal}>
         <img src={cross_icon} alt="" />
       </div>
-      <img src={image} alt="" width="532px" height="320px" />
+      <CarouselProvider
+        naturalSlideWidth={100}
+        naturalSlideHeight={80}
+        totalSlides={image?.length}
+        step={1}
+        isIntrinsicHeight={true}
+      >
+        <CarouselSlider image={image} />
+        <DotGroup className="dot-group" />
+      </CarouselProvider>
       <div className={s.cont}>
         <h4>{price} сом</h4>
         <span>{phone_number}</span>

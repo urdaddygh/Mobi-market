@@ -8,7 +8,6 @@ import {
   getLikedProductsForPagination,
   getProducts,
   getProductsById,
-  likeProduct,
   unLikeProduct,
 } from "../../../redux/slices/productsApiSlice";
 import { empty_icon, heart_icon, red_heart_icon } from "../../../Images";
@@ -46,24 +45,22 @@ function LikedProduct() {
   const products = useSelector((state) => state.products.likedProducts);
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products.likedErr);
-  const mes = useSelector(state=>state.products.message)
-  console.log(products);
+  console.log(product);
 
   useEffect(() => {
     dispatch(getLikedProducts(1));
   }, []);
 
-  // const likeProductById = (id, e) => {
-  //   e.stopPropagation();
-  //   let data = {value:{product:id}, showToastMessage, showSuccessMessage}
-  //   dispatch(likeProduct(data));
-  // };
+  const updatePage=()=>{
+    dispatch(getLikedProducts(products.page))
+  }
 
   const unLikeProductById = (id, e) => {
     e.stopPropagation();
     setSecondModalActive(false)
-    console.log(id)
-    dispatch(unLikeProduct(id));
+    setModalActive(false)
+    let data ={id, updatePage}
+    dispatch(unLikeProduct(data));
   };
   const openDeleteModal=(e, id)=>{
     e.stopPropagation();
@@ -74,10 +71,6 @@ function LikedProduct() {
     dispatch(getProductsById(data));
     setModalActive(true);
   };
-
-  useEffect(() => {
-    dispatch(getLikedProducts(products?.page));
-  }, [mes]);
 
   return (
     <>
@@ -94,7 +87,7 @@ function LikedProduct() {
                   key={index}
                   onClick={() => getProductForModal(el.id)}
                 >
-                  <img src={el.image} alt="" width="142px" height="85px" />
+                  <img src={el.images[0].image} alt="" width="142px" height="85px" />
                   <h4>{el.name}</h4>
                   <p>{el.price}</p>
                   <div className={s.heart_icon}>
@@ -114,7 +107,7 @@ function LikedProduct() {
               <Skeleton count={16} />
             )}
           </div>
-          {products?.count > 2 && (
+          {products?.count > 3 && (
             <Pagination
               page={products?.page}
               next={products?.next}
@@ -133,7 +126,7 @@ function LikedProduct() {
         setActive={setModalActive}
         full_description={product.full_description}
         id={product.id}
-        image={product.image}
+        image={product.images}
         like_count={product.like_count}
         liked_by_current_user={product.liked_by_current_user}
         name={product.name}

@@ -60,8 +60,12 @@ export const addProduct = createAsyncThunk(
   "getProductsReducer/addProduct",
   async (data) => {
     try {
-      const res = await requests.addProduct(data.values);
+      console.log(data)
+      const res = await requests.addProduct(data.formData);
       data.showSuccessMessage("Товар добавлен")
+      data.actions.resetForm()
+      data.updateProducts()
+      data.setActiveSuccess(false)
       return res.data;
     } catch (err) {
       throw new Error(console.log(err));
@@ -121,8 +125,10 @@ export const likeProduct = createAsyncThunk(
     try {
       const res = await requests.likeProduct(data.value);
       data.showSuccessMessage("Товар добавлен в понравившиеся")
+      data.updatePage()
       return res.data;
     } catch (err) {
+      console.log(err)
       data.showToastMessage("Подтвердите свой аккаунт пожалуйста")
       throw new Error(console.log(err.response));
     }
@@ -132,9 +138,37 @@ export const unLikeProduct = createAsyncThunk(
   "getProductsReducer/unLikeProduct",
   async (data) => {
     try {
-      console.log(data)
-      const res = await requests.unLikeProduct(data);
-      console.log(res.data)
+      const res = await requests.unLikeProduct(data.id);
+      data.updatePage()
+      return res.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
+
+export const changeProduct = createAsyncThunk(
+  "getProductsReducer/changeProduct",
+  async (data) => {
+    try {
+      const res = await requests.changeProduct(data);
+      data.showSuccessMessage("Товар изменен")
+      data.updateProduct()
+      return res.data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "getProductsReducer/deleteProduct",
+  async (data) => {
+    try {
+      const res = await requests.deleteProduct(data.id);
+      data.showSuccessMessage("Товар удалён")
+      data.updateProduct()
+      data.closeModal()
       return res.data;
     } catch (err) {
       throw new Error(err);
@@ -153,11 +187,20 @@ const productsApiSlice = createSlice({
     [clearStateProduct.fulfilled]: (state) => {
       state = initialState
     },
+    [changeProduct.pending]: (state) => {
+      state.error = false;
+    },
+    [changeProduct.fulfilled]: (state) => {
+      state.error = true;
+    },
+    [changeProduct.rejected]: (state) => {
+      state.error = false;
+    },
+
     [getProducts.pending]: (state) => {
       state.error = false;
     },
     [getProducts.fulfilled]: (state,action) => {
-      state.products = []
       state.products = action.payload;
       state.error = true;
     },
