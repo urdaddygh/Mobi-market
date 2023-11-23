@@ -40,7 +40,7 @@ export const getInfoOfUser = createAsyncThunk(
   }
 );
 export const clearStateProfile = createAsyncThunk("profile/clearState", () => {
-  return 
+  return initialState.user
 });
 export const updateProfilePage = createAsyncThunk("profile/clearState", (data) => {
   return data
@@ -53,7 +53,7 @@ const profileSlice = createSlice({
       state.message=action.payload
     },
     [clearStateProfile.fulfilled]: (state) => {
-      state=initialState
+      state.user = initialState.user;
     },
     [updateUserInfo.pending]: (state) => {
       state.error = false;

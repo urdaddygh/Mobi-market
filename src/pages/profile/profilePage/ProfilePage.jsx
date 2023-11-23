@@ -19,7 +19,6 @@ function ProfilePage({ApiUserInfo}) {
   const [modalActive, setModalActive] = useState(false);
   const [secondModalActive, setSecondModalActive] = useState(false);
   const [state, setState] = useState(false)
-  const [imageURL, setImageURL] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {

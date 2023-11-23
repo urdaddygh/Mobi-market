@@ -19,6 +19,12 @@ const ModalForAddProduct = ({ active, setActive, closeModal,setActiveSuccess }) 
       className: "popup",
     });
   };
+  const showErrMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
 
   const updateProducts = ()=>{
     dispatch(getProducts(products.page))
@@ -53,6 +59,7 @@ const ModalForAddProduct = ({ active, setActive, closeModal,setActiveSuccess }) 
         actions,
         updateProducts,
         setActiveSuccess,
+        showErrMessage
       };
 
       // for(let [key, value] of formData.entries()){

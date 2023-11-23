@@ -1,47 +1,60 @@
 import axios from "axios";
-import { getCookie } from "../utils/cookieFunction/cookieFunction";
+import { getCookie, removeCookie, setCookie } from "../utils/cookieFunction/cookieFunction";
 
 const access = getCookie("access")
 
-const acc = localStorage.getItem("access")
-
-console.log(acc)
-const fetchAPI = axios.create({
+const baseConfig = {
     baseURL: "https://neobook.online/mobi-market/",
     headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${access}`,
+      "Content-type": "application/json",
+      Authorization: `Bearer ${access}`,
     },
-});
-const fetchAPIImage = axios.create({
+  };
+  
+  const fetchAPI = axios.create(baseConfig);
+
+  const fetchAPIImage = axios.create({
+    ...baseConfig,
+    headers: {
+      "Content-type": "multipart/form-data",
+      Authorization: `Bearer ${access}`,
+    },
+  });
+
+
+  const fetchNoTokenAPI = axios.create({
     baseURL: "https://neobook.online/mobi-market/",
     headers: {
-        "Content-type": "multipart/form-data",
-        Authorization: `Bearer ${access}`,
+      "Content-type": "application/json",
     },
+  });
+  
+ const handleUnauthorizedError = async (error) => {
+  if (error.response.status === 401) {
+    try {
+      const res = await fetchNoTokenAPI.post("users/login/refresh/", { refresh: getCookie("refresh") });
+      setCookie("access", res.data.access);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.access}`;
+      return axios(error.config);
+    } catch (refreshError) {
+      removeCookie("access");
+      removeCookie("refresh");
+      window.location.href = "/";
+    }
+  }
+
+
+  return Promise.reject(error);
+};
+
+[fetchAPI, fetchAPIImage, fetchNoTokenAPI].forEach((instance) => {
+  instance.interceptors.response.use(undefined, handleUnauthorizedError);
 });
-
-const fetchAPIForChangePassword = axios.create({
-    baseURL: "https://neobook.online/mobi-market/",
-    headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${acc}`,
-    },
-});
-
-const fetchNoTokenAPI = axios.create({
-    baseURL: "https://neobook.online/mobi-market/",
-    headers: {
-        "Content-type": "application/json",
-    },
-});
-
-
 export const requests = {
     authApi:(data)=>fetchNoTokenAPI.post("users/login/", data),
     getRefreshToken:(data)=>fetchNoTokenAPI.post("users/login/refresh/", data),
     forgotPassword:(data)=>fetchNoTokenAPI.post("users/forgot-password/", data),
-    changePassword:(data)=>fetchAPIForChangePassword.post("users/change-password/", data),
+    changePassword:(data)=>fetchAPI.post("users/change-password/", data),
     sendCodeApi:(data)=>fetchAPI.put("users/send-code/", data),
     verifyPhoneApi:(data)=>fetchAPI.post("users/verify-phone/", data),
     registerApi:(data)=>fetchNoTokenAPI.post("users/register/", data),

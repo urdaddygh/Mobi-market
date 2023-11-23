@@ -7,14 +7,9 @@ export const Pagination = ({ page, take, previous, next, takeTwo,count }) => {
   const dispatch = useDispatch();
 
   let totalPages = Math.ceil(count /3) 
-  // let p = Array(pages)
-  // console.log(count)
   const pagination = (next) => {
     dispatch(take(next));
   };
-
-  // let current = next[next.length - 1]
-  // console.log(current)
 
   return (
     <div className={s.pagination}>

@@ -15,17 +15,6 @@ const initialState = {
   message:{}
 };
 
-let refresh = getCookie("refresh")
-axios.interceptors.response.use(resp=>resp, async error =>{
-  console.log(error, 'error')
-  let refresh = getCookie("refresh")
-  if(error.response.status===401){
-      const res = await requests.getRefreshToken({refresh:refresh})
-      setCookie("access", res.data.access)
-      return console.log(res, 'res')
-  }
-})
-
 export const getProducts = createAsyncThunk(
   "getProductsReducer/getProducts",
   async (data) => {
@@ -33,14 +22,7 @@ export const getProducts = createAsyncThunk(
       const res = await requests.getProducts(data);
       return res.data;
     } catch (err) {
-      if(err.response.status===401){
-        console.log(refresh)
-        const res = await requests.getRefreshToken({refresh:refresh})
-        setCookie("access", res.data.access)
-        return console.log(res, 'res')
-    }
-      console.log(err.response.status)
-      
+      throw new Error(err)
     }
   }
 );
@@ -68,6 +50,7 @@ export const addProduct = createAsyncThunk(
       data.setActiveSuccess(false)
       return res.data;
     } catch (err) {
+      data.showErrMessage("Добавьте изображение")
       throw new Error(console.log(err));
     }
   }

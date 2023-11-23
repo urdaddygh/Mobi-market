@@ -48,7 +48,8 @@ function MainPage() {
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products);
   const userInfo = useSelector((state) => state.profile.user);
-  // console.log(products);
+  console.log(products);
+  console.log(err.error);
 
   const likeProductById = (id, e) => {
     e.stopPropagation();
@@ -103,7 +104,7 @@ function MainPage() {
           products?.results.map((el) => (
             <div
               className={s.product_card}
-              key={el.id}
+              key={el?.id}
               onClick={() => getProductForModal(el.id)}
             >
               <img
@@ -112,16 +113,16 @@ function MainPage() {
                 width="142px"
                 height="85px"
               />
-              <h4>{el.name}</h4>
-              <p>{el.price}</p>
+              <h4>{el?.name}</h4>
+              <p>{el?.price}</p>
               <div className={s.heart_icon}>
                 <img
-                  src={el.liked_by_current_user ? red_heart_icon : heart_icon}
+                  src={el?.liked_by_current_user ? red_heart_icon : heart_icon}
                   alt=""
                   onClick={
-                    el.liked_by_current_user
-                      ? (e) => unLikeProductById(el.id, e)
-                      : (e) => likeProductById(el.id, e)
+                    el?.liked_by_current_user
+                      ? (e) => unLikeProductById(el?.id, e)
+                      : (e) => likeProductById(el?.id, e)
                   }
                   className={s.heart}
                 />

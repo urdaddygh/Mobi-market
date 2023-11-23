@@ -13,6 +13,7 @@ import { changeErr, postAuth } from "../../redux/slices/authSlice";
 import ModalForPhone from "./ModalForPhone";
 import ModalForMessage from "./ModalForMessage";
 import ModalForPassword from "./ModalForPassword";
+import { getInfoOfUser } from "../../redux/slices/profileSlice";
 
 function Auth() {
   const [state, setState] = useState(false);
@@ -59,7 +60,7 @@ function Auth() {
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       let data = { values, navigate, showToErrMessage };
-      dispatch(postAuth(data));
+      dispatch(postAuth(data))
     },
   });
 
