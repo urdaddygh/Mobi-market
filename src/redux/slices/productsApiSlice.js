@@ -150,10 +150,12 @@ export const unLikeProduct = createAsyncThunk(
 export const changeProduct = createAsyncThunk(
   "getProductsReducer/changeProduct",
   async (data) => {
+    console.log(data.id)
     try {
       const res = await requests.changeProduct(data);
       data.showSuccessMessage("Товар изменен")
       data.updateProduct()
+      data.clear()
       return res.data;
     } catch (err) {
       throw new Error(err);

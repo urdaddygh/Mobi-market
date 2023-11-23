@@ -22,10 +22,14 @@ const ModalForChangeProduct = ({
   closeModal,
   isChanging,
   setIsChanging,
-  myProductsPage
+  myProductsPage,
+  deleteProductById,
+  clear
 }) => {
   const dispatch = useDispatch()
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [filesForServer, setFilesForServer] = useState([]);
+  const [imageForDelete, setImageForDelete] = useState([]);
   const fileInputRef = useRef(null);
 
   const updateProduct=()=>{
@@ -45,14 +49,12 @@ const ModalForChangeProduct = ({
     });
   };
 
-
   const formik = useFormik({
     validateOnChange: true,
     validateOnMount: false,
     validateOnBlur: false,
     enableReinitialize:true,
     initialValues: {
-      uploaded_images:{},
       price: price,
       name: name,
       short_description: short_description,
@@ -60,33 +62,38 @@ const ModalForChangeProduct = ({
     },
     onSubmit: (values) => {
       let formData = new FormData();
-      console.log(selectedFiles)
-      selectedFiles.forEach((file) => {
-        formData.append("image[]", file);
+      console.log(filesForServer)
+      filesForServer.forEach((file) => {
+        formData.append("uploaded_images", file);
+      });
+      imageForDelete.forEach((file) => {
+        formData.append("deleted_images", file);
       });
       formData.append("price", values.price);
       formData.append("name", values.name);
       formData.append("short_description", values.short_description);
       formData.append("full_description", values.full_description);
-      console.log(formData.getAll('image[]'))
-      let data = { values, showSuccessMessage, updateProduct, id };
+      console.log(values)
+      for (let property of formData.entries()) {
+        console.log(property[0], property[1]);
+      }
+      let data = { formData, showSuccessMessage, updateProduct, id, clear };
       dispatch(changeProduct(data))
     },
   });
 
   const handleFileChange = () => {
     const files = Array.from(fileInputRef.current.files);
+    // console.log(files)
     setSelectedFiles([...selectedFiles, ...files]);
+    setFilesForServer([...filesForServer, ...files])
   };
   const deleteImg = (product)=>{
-    console.log(product)
-    setSelectedFiles(selectedFiles.filter(el=>el.name!==product))
+    setImageForDelete([...imageForDelete, product.id])
+    setSelectedFiles(selectedFiles.filter(el=>el.id!==product.id))
   }
-
-  const deleteProductById = ()=>{
-    let data = {showSuccessMessage, id, closeModal, updateProduct}
-    dispatch(deleteProduct(data))
-  }
+  
+  // console.log(imageForDelete)
   return (
     <Modal active={active} setActive={setActive} width="564px" height="90%">
       <div className={s.cross_icon} onClick={closeModal}>
@@ -120,12 +127,12 @@ const ModalForChangeProduct = ({
                 <div className={s.div_img} key={index}>
                   <img
                     className={s.added_img}
-                    src={file.image}
+                    src={file instanceof Blob ? URL.createObjectURL(file) : file?.image}
                     alt={`Изображение ${index + 1}`}
                   />
                   <div
                     className={s.delete}
-                    onClick={() => deleteImg(file.name)}
+                    onClick={() => deleteImg(file)}
                   ></div>
                 </div>
               ))}

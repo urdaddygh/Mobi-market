@@ -106,7 +106,12 @@ function MainPage() {
               key={el.id}
               onClick={() => getProductForModal(el.id)}
             >
-              <img src={el.images[0].image} alt="" width="142px" height="85px" />
+              <img
+                src={el.images[0].image}
+                alt=""
+                width="142px"
+                height="85px"
+              />
               <h4>{el.name}</h4>
               <p>{el.price}</p>
               <div className={s.heart_icon}>
@@ -164,7 +169,11 @@ function MainPage() {
         closeModal={() => setCancelModalActive(true)}
       />
       {cancelModalActive && (
-        <ModalForCancel yesClick={clickOnYes} noClick={clickOnNo} />
+        <ModalForCancel
+          yesClick={clickOnYes}
+          noClick={clickOnNo}
+          text="Вы действительно хотите отменить добавление товара?"
+        />
       )}
       <DeleteModal
         acitve={deleteModalActive}

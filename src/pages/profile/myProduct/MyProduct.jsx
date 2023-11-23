@@ -3,19 +3,22 @@ import BackToPrevBtn from '../../../components/backToPrevBtn/BackToPrevBtn'
 import s from './MyProduct.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
-import { getLikedProducts, getMyProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
-import { empty_icon, heart_icon, red_heart_icon } from '../../../Images';
+import { deleteProduct, getLikedProducts, getMyProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
+import { change_icon, empty_icon, heart_icon, red_heart_icon, three_dot, trash_delete_icon } from '../../../Images';
 import Skeleton from '../../../components/skeleton/Skeleton';
 import { Pagination } from '../../../components/pagination/Pagination';
 import ModalForProduct from '../../../components/modalForProduct/ModalForProduct';
 import DeleteModal from '../../../components/deleteModal/DeleteModal';
 import ModalForChangeProduct from '../../../components/modalForChangeProduct/ModalForChangeProduct';
+import { ModalForCancel } from '../../../components/modalForCancel/ModalForCancel';
 function MyProduct() {
 
     const [modalActive, setModalActive] = useState(false);
     const [secondModalActive, setSecondModalActive] = useState(false);
     const [cancelModalActive, setCancelModalActive] = useState(false);
     const [isChanging, setIsChanging] = useState(false)
+    const [threeDotActive, setThreeDotActive] = useState(false)
+
     const activeModal =()=>{
       setSecondModalActive(false)
       setModalActive(true)
@@ -42,7 +45,7 @@ function MyProduct() {
     const products = useSelector((state) => state.products.myProducts);
     const product = useSelector((state) => state.products.product);
     const err = useSelector((state) => state.products.getMyProductsErr);
-    console.log(err);
+    console.log(product);
 
     const updatePage = ()=>{
       dispatch(getMyProducts(products.page))
@@ -63,11 +66,15 @@ function MyProduct() {
 
     const getProductForModal = (data) => {
       dispatch(getProductsById(data));
+      setThreeDotActive(false)
       setModalActive(true);
     };
 
     const openDeleteModal=(id, e)=>{
       e.stopPropagation();
+      setThreeDotActive(false)
+      setModalActive(false)
+      closeModal()
       dispatch(getProductsById(id))
       setSecondModalActive(true)
     }
@@ -76,6 +83,29 @@ function MyProduct() {
       setModalActive(false)
       setIsChanging(false)
     }
+  
+    const clickOnYes=()=>{
+      setCancelModalActive(false)
+      closeModal()
+      // setSecondModalActive(false)
+    }
+    const clickOnNo=()=>{
+      setCancelModalActive(false)
+    }
+    
+  const updateProduct=()=>{
+    dispatch(getMyProducts(products.page))
+  }
+    const deleteProductById = ()=>{
+      let data = {showSuccessMessage, id:product.id, closeModal, updateProduct}
+      dispatch(deleteProduct(data))
+      setSecondModalActive(false)
+    }
+    const openThreeDot=(e)=>{
+      e.stopPropagation();
+      setThreeDotActive(true)
+    }
+
   return (
     <>
       <ToastContainer />
@@ -91,7 +121,12 @@ function MyProduct() {
                   key={index}
                   onClick={() => getProductForModal(el.id)}
                 >
-                  <img src={el.images[0].image} alt="" width="142px" height="85px" />
+                  <img
+                    src={el?.images[0]?.image}
+                    alt=""
+                    width="142px"
+                    height="85px"
+                  />
                   <h4>{el.name}</h4>
                   <p>{el.price}</p>
                   <div className={s.heart_icon}>
@@ -102,12 +137,24 @@ function MyProduct() {
                       alt=""
                       onClick={
                         el.liked_by_current_user
-                          ? (e) => openDeleteModal(el.id, e)
+                          ? (e) => unLikeProductById(el.id, e)
                           : (e) => likeProductById(el.id, e)
                       }
                       className={s.heart}
                     />
                     <span> {el.like_count}</span>
+                    {!threeDotActive ? (
+                      <img src={three_dot} alt="" className={s.three_dot} onClick={(e)=>openThreeDot(e)}/>
+                    ) : (
+                      <div className={s.three_dot_active}>
+                        <div className={s.box} onClick={() => getProductForModal(el.id)}>
+                          <img src={change_icon} alt="" /> <p>Изменить</p>
+                        </div>
+                        <div className={s.box} onClick={(e)=>openDeleteModal(el.id, e)}>
+                          <img src={trash_delete_icon} alt="" /> <p>Удалить</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))
@@ -115,39 +162,49 @@ function MyProduct() {
               <Skeleton count={16} />
             )}
           </div>
-          {products?.count >3&&
-          <Pagination
-            page={products.page}
-            next={products.next}
-            previous={products.previous}
-            take={getProductsForPagination}
-            takeTwo={getProducts}
-            count={products.count}
-          />}
+          {products?.count > 3 && (
+            <Pagination
+              page={products.page}
+              next={products.next}
+              previous={products.previous}
+              take={getProductsForPagination}
+              takeTwo={getProducts}
+              count={products.count}
+            />
+          )}
         </>
       ) : (
         <img src={empty_icon} className={s.empty_icon} />
       )}
       <ModalForChangeProduct
         active={modalActive}
-        setActive={closeModal}
+        setActive={() => setCancelModalActive(true)}
         full_description={product.full_description}
+        clear={closeModal}
         id={product.id}
         image={product.images}
         name={product.name}
         price={product.price}
         short_description={product.short_description}
-        closeModal={closeModal}
+        closeModal={() => setCancelModalActive(true)}
         isChanging={isChanging}
         setIsChanging={setIsChanging}
         myProductsPage={products.page}
+        deleteProductById={(e) => openDeleteModal(product.id, e)}
       />
       <DeleteModal
         acitve={secondModalActive}
-        setActive={secondModalActive}
-        onClick={(e) => unLikeProductById(product.id, e)}
+        setActive={setSecondModalActive}
+        onClick={deleteProductById}
         cancelClick={activeModal}
       />
+      {cancelModalActive && (
+        <ModalForCancel
+          yesClick={clickOnYes}
+          noClick={clickOnNo}
+          text="Вы действительно хотите отменить изменение товара?"
+        />
+      )}
     </>
   );
 }

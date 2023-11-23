@@ -31,13 +31,13 @@ export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
   async (data) => {
     try {
-   
       const res = await requests.forgotPassword(data.values);
-     
+      data.setState(false)
       data.onClick();
       return res.data;
     } catch (error) {
       data.showErrMessage("Пользователь с таким номером телефона отсуствует")
+      data.setState(true)
       throw new Error(console.log(error))
     }
   }
@@ -65,6 +65,7 @@ export const changePassword = createAsyncThunk(
       const res = await requests.changePassword(data.values);
       console.log("change", res.data);
       data.setModalActive(false)
+      data.showToSuccessMessage("Пароль изменён")
       return res.data;
     } catch (error) {
       // data.showErrMessage("Неверный код")
@@ -79,9 +80,11 @@ export const sendCodeApi = createAsyncThunk(
     try {
       const res = await requests.sendCodeApi(data.values);
       data.onClick();
+      data.setErr(false)
       console.log(res.data)
       return res.data;
     } catch (error) {
+      data.setErr(true)
       throw new Error(console.log(error))
     }
   }

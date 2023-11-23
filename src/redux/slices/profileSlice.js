@@ -15,7 +15,7 @@ export const updateUserInfo = createAsyncThunk(
   async (data) => {
     console.log(data)
     try {
-      const res = await requests.updateUserInfo(data.values);
+      const res = await requests.updateUserInfo(data.formData);
       data.showSuccessMessage("Данные успешно изменены")
       data.setState(false)
       window.location.reload()

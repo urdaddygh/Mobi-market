@@ -5,7 +5,7 @@ import { Modal } from "../../components/modal/Modal";
 import InputMask from "react-input-mask";
 import { useFormik } from "formik";
 import { forgotPassword } from "../../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 function PhoneInput({value,onChange,name,className, placeholder, type}) {
@@ -27,7 +27,7 @@ function PhoneInput({value,onChange,name,className, placeholder, type}) {
 
 function ModalForPhone({ modalActive, setModalActive, onClick }) {
   const dispatch = useDispatch();
-
+  const [state, setState] = useState(false)
   const showErrMessage = (data) => {
     toast.error(data, {
       position: toast.POSITION.TOP_CENTER,
@@ -43,7 +43,7 @@ function ModalForPhone({ modalActive, setModalActive, onClick }) {
       phone: "",
     },
     onSubmit: (values) => {
-      let data = { values, onClick,showErrMessage };
+      let data = { values, onClick,showErrMessage,setState };
       dispatch(forgotPassword(data));
     },
   });
@@ -67,6 +67,8 @@ function ModalForPhone({ modalActive, setModalActive, onClick }) {
               name="phone"
               className={s.mask}
             ></PhoneInput>
+
+           {state&& <p style={{color:"red", marginTop:"5px", fontWeight:"700"}}>Данный номер телефона не зарегестрирован</p>} 
 
             <div>
               <button

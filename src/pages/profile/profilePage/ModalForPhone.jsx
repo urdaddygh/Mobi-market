@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import s from "./Profile.module.css";
 import { phone_img } from "../../../Images";
 import { Modal } from "../../../components/modal/Modal";
@@ -25,7 +25,7 @@ function PhoneInput({ value, onChange, name, className, placeholder, type }) {
 
 function ModalForPhone({ modalActive, setModalActive, onClick }) {
   const dispatch = useDispatch();
-  const err = useSelector(state=>state.auth.verifyErr)
+  const [err,setErr]= useState(false)
   const formik = useFormik({
     validateOnChange: false,
     validateOnMount: false,
@@ -34,12 +34,14 @@ function ModalForPhone({ modalActive, setModalActive, onClick }) {
       phone: "",
     },
     onSubmit: (values) => {
-      let data = { values, onClick };
+      let data = { values, onClick, setErr };
       dispatch(sendCodeApi(data));
       console.log(values);
     },
   });
-
+  useEffect(()=>{
+    setErr(false)
+  },[formik.values.phone])
   return (
     <>
       <Modal

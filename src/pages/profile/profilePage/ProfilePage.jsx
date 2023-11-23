@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import s from "./Profile.module.css";
 import NavBar from "../../../components/navbar/NavBar";
 import BackToPrevBtn from "../../../components/backToPrevBtn/BackToPrevBtn";
-import { profile_icon } from "../../../Images";
+import { Icon_for_add_img, profile_icon } from "../../../Images";
 import { useFormik } from "formik";
 import Button from "../../../components/button/Button";
 import ModalForPhone from "./ModalForPhone";
@@ -19,6 +19,7 @@ function ProfilePage({ApiUserInfo}) {
   const [modalActive, setModalActive] = useState(false);
   const [secondModalActive, setSecondModalActive] = useState(false);
   const [state, setState] = useState(false)
+  const [imageURL, setImageURL] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,9 +27,9 @@ function ProfilePage({ApiUserInfo}) {
   }, []);
 
   const userInfo = useSelector((state) => state.profile.user);
-  const mes = useSelector(state=>state.profile.message)
+  const fileInputRef = useRef(null);
 
-  // console.log(userInfo);
+  console.log(userInfo);
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -77,11 +78,19 @@ function ProfilePage({ApiUserInfo}) {
       birth_date: userInfo.birth_date,
       email: userInfo.email,
       phone: userInfo.phone,
+      photo: userInfo.photo
     },
     onSubmit: (values) => {
-      // console.log(values);
+      console.log(values);
+      let formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      for (let property of formData.entries()) {
+        console.log(property[0], property[1]);
+      }
       let data = {
-        values: { ...values },
+        formData,
         showToErrMessage,
         showSuccessMessage,
         setState
@@ -121,94 +130,113 @@ function ProfilePage({ApiUserInfo}) {
         )}
 
       <h2 className={s.h2}>Профиль</h2>
-      <div className={s.profile_icon}>
-        <img src={profile_icon} alt="" width="31.5" height="40.5" />
-      </div>
+      <div className={s.profile_icon} onClick={() => fileInputRef.current.click()}>
+      {formik.values.photo ? (
+        <img
+          src={typeof formik.values.photo === 'string' ? formik.values.photo : URL.createObjectURL(formik.values.photo)}
+          alt="Selected Image"
+          className={s.new_avatar}
+        />
+      ) : (
+        <img src={Icon_for_add_img} alt="" width="31.5" height="40.5" />
+      )}
+      <input
+        accept="image/png, jpg"
+        type="file"
+        name="photo"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={(event) => {
+          formik.setFieldValue("photo", event.target.files[0]);
+        }}
+      />
+    </div>
       <p className={s.p}>Выбрать фотографию</p>
-      <form action="" onSubmit={formik.handleSubmit}>
-        <div className={s.cont_input}>
-          <input
-            type="text"
-            name="first_name"
-            value={formik.values.first_name}
-            onChange={formik.handleChange}
-            className={s.input}
-            placeholder="Имя"
-            // readOnly={
-            //   !state
-            // }
-          />
-          <input
-            type="text"
-            name="last_name"
-            value={formik.values.last_name}
-            onChange={formik.handleChange}
-            className={s.input}
-            placeholder="Фамилия"
-            // readOnly={
-            //   !state
-            // }
-          />
-          <input
-            type="text"
-            name="username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            className={s.input}
-            placeholder="Имя пользователя"
-            // readOnly={
-            //   !state
-            // }
-          />
-          <input
-            type="text"
-            name="birth_date"
-            value={formik.values.birth_date}
-            onChange={formik.handleChange}
-            className={s.input}
-            placeholder="Дата рождения"
-            // readOnly={
-            //   !state
-            // }
-          />
-        </div>
-        <div className={s.add_number} onClick={() => setModalActive(true)}>
-          <p>Добавить номер</p>
-          <input
-            type="text"
-            name="phone"
-            value={formik.values.phone}
-            onChange={formik.handleChange}
-            className={s.input_number}
-            placeholder="0(000) 000 000"
-            readOnly
-          />
-        </div>
+
+      <div className={s.cont_input}>
         <input
-          type="email"
-          name="email"
-          value={formik.values.email}
+          type="text"
+          name="first_name"
+          value={formik.values.first_name}
           onChange={formik.handleChange}
           className={s.input}
-          placeholder="Почта"
-          readOnly={!state}
+          placeholder="Имя"
+          // readOnly={
+          //   !state
+          // }
         />
-        {!(
-          userInfo.email &&
-          userInfo.birth_date &&
-          userInfo.first_name &&
-          userInfo.last_name &&
-          userInfo.username
-        ) || state ? (
-          <Button
-            text="Закончить регистрацию"
-            margin="44px auto 0 auto"
-            type="submit"
-          />
-        ) : (
-          <></>
-        )}
-      </form>
+        <input
+          type="text"
+          name="last_name"
+          value={formik.values.last_name}
+          onChange={formik.handleChange}
+          className={s.input}
+          placeholder="Фамилия"
+          // readOnly={
+          //   !state
+          // }
+        />
+        <input
+          type="text"
+          name="username"
+          value={formik.values.username}
+          onChange={formik.handleChange}
+          className={s.input}
+          placeholder="Имя пользователя"
+          // readOnly={
+          //   !state
+          // }
+        />
+        <input
+          type="text"
+          name="birth_date"
+          value={formik.values.birth_date}
+          onChange={formik.handleChange}
+          className={s.input}
+          placeholder="Дата рождения"
+          // readOnly={
+          //   !state
+          // }
+        />
+      </div>
+      <div className={s.add_number} onClick={() => setModalActive(true)}>
+        <p>Добавить номер</p>
+        <input
+          type="text"
+          name="phone"
+          value={formik.values.phone}
+          onChange={formik.handleChange}
+          className={s.input_number}
+          placeholder="0(000) 000 000"
+          readOnly
+        />
+      </div>
+      <input
+        type="email"
+        name="email"
+        value={formik.values.email}
+        onChange={formik.handleChange}
+        className={s.input}
+        placeholder="Почта"
+        readOnly={!state}
+      />
+      {!(
+        userInfo.email &&
+        userInfo.birth_date &&
+        userInfo.first_name &&
+        userInfo.last_name &&
+        userInfo.username
+      ) || state ? (
+        <Button
+          text="Закончить регистрацию"
+          margin="44px auto 0 auto"
+          type="button"
+          onClick={() => formik.handleSubmit()}
+        />
+      ) : (
+        <></>
+      )}
+
       <ModalForPhone
         modalActive={modalActive}
         setModalActive={setModalActive}

@@ -47,7 +47,7 @@ export const requests = {
     registerApi:(data)=>fetchNoTokenAPI.post("users/register/", data),
     checkUser:(data)=>fetchNoTokenAPI.post("users/check-user/", data),
     resetPassApi:(data)=>fetchNoTokenAPI.post(`users/reset-password/${data.id}/`, data.values),
-    updateUserInfo:(data)=>fetchAPI.put("users/profile/update/", data),
+    updateUserInfo:(data)=>fetchAPIImage.put("users/profile/update/", data),
     getInfoOfUser:()=>fetchAPI.get(`users/me/`),
 
     getProducts:(data)=>fetchAPI.get(`products/?page=${data}&limit=3`),
@@ -57,7 +57,7 @@ export const requests = {
     getProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     getLikedProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     likeProduct:(data)=>fetchAPI.post("products/like/", data),
-    changeProduct:(data)=>fetchAPI.put(`products/${data.id}/`, data.values),
+    changeProduct:(data)=>fetchAPIImage.put(`products/${data.id}/`, data.formData),
     deleteProduct:(data)=>fetchAPI.delete(`products/${data}/`),
     addProduct:(data)=>fetchAPIImage.post("products/", data),
     unLikeProduct:(data)=>fetchAPI.delete(`products/unlike/${data}`, ),

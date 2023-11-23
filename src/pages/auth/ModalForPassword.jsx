@@ -54,9 +54,10 @@ function ModalForPassword({ modalActive, setModalActive }) {
           let data = {
             values,
             setModalActive,
+            showToSuccessMessage
           };
           console.log(values);
-          dispatch(changePassword(data));
+          dispatch(changePassword(data, showToSuccessMessage));
       } else {
         showToErrMessage("Пароли не совпадают");
         setConfirm(true);

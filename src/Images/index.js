@@ -24,7 +24,10 @@ import exit_icon from './exit_icon.png'
 import empty_icon from './empty_icon.png'
 import delete_icon from './delete_icon.png'
 import trash_img from './trash_img.svg'
-
+import three_dot from './three_dot.svg'
+import change_icon from './change_icon.svg'
+import trash_delete_icon from './trash_delete_icon.svg'
+import Icon_for_add_img from './Icon_for_add_img.png'
 export{
     arrow_back,
     lock,
@@ -51,5 +54,9 @@ export{
     exit_icon,
     empty_icon,
     delete_icon,
-    trash_img
+    trash_img,
+    three_dot,
+    change_icon,
+    trash_delete_icon,
+    Icon_for_add_img
 }
