@@ -63,10 +63,10 @@ export const requests = {
     updateUserInfo:(data)=>fetchAPIImage.put("users/profile/update/", data),
     getInfoOfUser:()=>fetchAPI.get(`users/me/`),
 
-    getProducts:(data)=>fetchAPI.get(`products/?page=${data}&limit=3`),
+    getProducts:(data)=>fetchAPI.get(`products/?page=${data}&limit=32`),
     getProductsById:(data)=>fetchAPI.get(`products/${data}/`),
-    getProductsLiked:(data)=>fetchAPI.get(`products/liked/?page=${data}&limit=3`),
-    getMyProducts:(data)=>fetchAPI.get(`products/my-products/?page=${data}&limit=3`),
+    getProductsLiked:(data)=>fetchAPI.get(`products/liked/?page=${data}&limit=32`),
+    getMyProducts:(data)=>fetchAPI.get(`products/my-products/?page=${data}&limit=32`),
     getProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     getLikedProductsForPagination:(data)=>fetchAPI.get(`${data}`),
     likeProduct:(data)=>fetchAPI.post("products/like/", data),

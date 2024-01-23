@@ -108,7 +108,7 @@ function MainPage() {
               onClick={() => getProductForModal(el.id)}
             >
               <img
-                src={el.images[0].image}
+                src={el.images[0]?.image}
                 alt=""
                 width="142px"
                 height="85px"
@@ -126,15 +126,15 @@ function MainPage() {
                   }
                   className={s.heart}
                 />
-                <span> {el.like_count}</span>
+                <span> {el?.like_count}</span>
               </div>
             </div>
           ))
         ) : (
-          <Skeleton count={2} />
+          <Skeleton count={32} />
         )}
       </section>
-      {products?.count > 3 && (
+      {products?.count > 32 && (
         <div className={s.pagination_cont}>
           <Pagination
             page={products?.page}

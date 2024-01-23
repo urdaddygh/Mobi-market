@@ -6,7 +6,7 @@ import { arrow_left, arrow_right } from "../../Images";
 export const Pagination = ({ page, take, previous, next, takeTwo,count }) => {
   const dispatch = useDispatch();
 
-  let totalPages = Math.ceil(count /3) 
+  let totalPages = Math.ceil(count / 32) 
   const pagination = (next) => {
     dispatch(take(next));
   };
