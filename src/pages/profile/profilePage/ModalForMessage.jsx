@@ -3,7 +3,6 @@ import { persone_img } from "../../../Images";
 import s from "./Profile.module.css";
 import { Modal } from "../../../components/modal/Modal";
 import { useFormik } from "formik";
-import { Preloader, Oval } from "react-preloader-icon";
 import { useDispatch, useSelector } from "react-redux";
 import { verifyPhoneApi } from "../../../redux/slices/authSlice";
 import { ToastContainer, toast } from "react-toastify";
@@ -92,13 +91,13 @@ function ModalForMessage({
                 <>
                   <p className={s.sms} >Повторный запрос</p>
                   <div className={s.prloader_cont}>
-                    <Preloader
+                    {/* <Preloader
                       use={Oval}
                       size={16}
                       strokeWidth={8}
                       strokeColor="#494949"
                       duration={2000}
-                    />
+                    /> */}
                     <p>00:{count}</p>
                   </div>
                   {err && (
