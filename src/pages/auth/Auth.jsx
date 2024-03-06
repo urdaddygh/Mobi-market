@@ -14,6 +14,8 @@ import ModalForPhone from "./ModalForPhone";
 import ModalForMessage from "./ModalForMessage";
 import ModalForPassword from "./ModalForPassword";
 import { getInfoOfUser } from "../../redux/slices/profileSlice";
+import { getCookie } from "../../utils/cookieFunction/cookieFunction";
+import { getProductsBegin } from "../../redux/slices/productsApiSlice";
 
 function Auth() {
   const [state, setState] = useState(false);
@@ -23,6 +25,11 @@ function Auth() {
   const [modalActive, setModalActive] = useState(false);
   const [secondModalActive, setSecondModalActive] = useState(false);
   const [thirdModalActive, setThirdModalActive] = useState(false);
+
+  // const getProduct = (access, data) => {
+  //    dispatch(getProductsBegin(access))
+  //    navigate(data)
+  // }
 
   const changeActive =()=>{
     setSecondModalActive(true)

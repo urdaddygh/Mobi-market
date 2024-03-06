@@ -6,6 +6,7 @@ import { FieldArray, useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, getProducts } from "../../redux/slices/productsApiSlice";
+import { useNavigate } from "react-router-dom";
 
 const ModalForAddProduct = ({ active, setActive, closeModal,setActiveSuccess }) => {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const ModalForAddProduct = ({ active, setActive, closeModal,setActiveSuccess }) 
         actions,
         updateProducts,
         setActiveSuccess,
-        showErrMessage
+        showErrMessage,
       };
 
       // for(let [key, value] of formData.entries()){

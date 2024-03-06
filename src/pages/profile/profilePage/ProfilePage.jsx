@@ -28,8 +28,6 @@ function ProfilePage({ApiUserInfo}) {
   const userInfo = useSelector((state) => state.profile.user);
   const fileInputRef = useRef(null);
 
-  console.log(userInfo);
-
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
       .min(2)
@@ -80,6 +78,9 @@ function ProfilePage({ApiUserInfo}) {
       photo: userInfo.photo
     },
     onSubmit: (values) => {
+      if(typeof values.photo==="string" || values.photo===null){
+        delete values.photo
+      }
       console.log(values);
       let formData = new FormData();
       for (let value in values) {
@@ -132,7 +133,7 @@ function ProfilePage({ApiUserInfo}) {
       <div className={s.profile_icon} onClick={() => fileInputRef.current.click()}>
       {formik.values.photo ? (
         <img
-          src={typeof formik.values.photo === 'string' ? formik.values.photo : URL.createObjectURL(formik.values.photo)}
+          src={typeof formik.values.photo === 'string' ? userInfo.photo : URL.createObjectURL(formik.values.photo)}
           alt="Selected Image"
           className={s.new_avatar}
         />

@@ -22,10 +22,31 @@ export const getProducts = createAsyncThunk(
       const res = await requests.getProducts(data);
       return res.data;
     } catch (err) {
-      throw new Error(err)
+      throw new Error(err,"errrrrrrr")
     }
   }
 );
+// export const getProductsBegin = createAsyncThunk(
+//   "getProductsReducer/getProductsBegin",
+//   async (data) => {
+//     const access = getCookie("access")
+//     try {
+//       const config = {
+//         headers: {
+//           "Content-type": "application/json",
+//           Authorization: `Bearer ${access}`,
+//         },
+//       };
+//       const res = await axios.get(
+//         `https://neobook.online/mobi-market/products/?page=${data}&limit=32`,
+//         config
+//       );
+//       return res.data;
+//     } catch (err) {
+//       throw new Error(err, "errrrrrrr");
+//     }
+//   }
+// );
 export const getLikedProducts = createAsyncThunk(
   "getProductsReducer/getLikedProducts",
   async (data) => {
@@ -50,6 +71,10 @@ export const addProduct = createAsyncThunk(
       data.setActiveSuccess(false)
       return res.data;
     } catch (err) {
+      if(err.response.status===403){
+      data.showErrMessage("Подтвердите аккаунт")
+      throw new Error(console.log(err));
+      }
       data.showErrMessage("Добавьте изображение")
       throw new Error(console.log(err));
     }
@@ -106,12 +131,11 @@ export const likeProduct = createAsyncThunk(
   "getProductsReducer/likeProduct",
   async (data) => {
     try {
-      const res = await requests.likeProduct(data.value);
+      const res = await requests.likeProduct(data.id);
       data.showSuccessMessage("Товар добавлен в понравившиеся")
       data.updatePage()
       return res.data;
     } catch (err) {
-      console.log(err)
       data.showToastMessage("Подтвердите свой аккаунт пожалуйста")
       throw new Error(console.log(err.response));
     }

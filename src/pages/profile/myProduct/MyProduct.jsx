@@ -53,7 +53,7 @@ function MyProduct() {
 
     const likeProductById = (id, e) => {
       e.stopPropagation();
-      let data = {value:{product:id}, showToastMessage, showSuccessMessage, updatePage}
+      let data = {id, showToastMessage, showSuccessMessage, updatePage}
       dispatch(likeProduct(data));
     };
 

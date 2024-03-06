@@ -1,10 +1,11 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import s from "./MainPage.module.css";
 import Header from "../../components/header/Header";
-import { heart_icon, img, liked_icon, red_heart_icon } from "../../Images";
+import { heart_icon, red_heart_icon } from "../../Images";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProducts,
+  getProductsBegin,
   getProductsById,
   getProductsForPagination,
   likeProduct,
@@ -16,8 +17,9 @@ import { ToastContainer, toast } from "react-toastify";
 import ModalForProduct from "../../components/modalForProduct/ModalForProduct";
 import ModalForAddProduct from "../../components/modalForAddProduct/ModalForAddProduct";
 import { ModalForCancel } from "../../components/modalForCancel/ModalForCancel";
-import { getInfoOfUser, updateProfilePage } from "../../redux/slices/profileSlice";
+import { getInfoOfUser } from "../../redux/slices/profileSlice";
 import DeleteModal from "../../components/deleteModal/DeleteModal";
+import { getCookie } from "../../utils/cookieFunction/cookieFunction";
 
 function MainPage() {
   const [modalActive, setModalActive] = useState(false);
@@ -48,12 +50,10 @@ function MainPage() {
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products);
   const userInfo = useSelector((state) => state.profile.user);
-  console.log(products);
-  console.log(err.error);
 
   const likeProductById = (id, e) => {
     e.stopPropagation();
-    let data = {value:{product:id}, showToastMessage, showSuccessMessage, updatePage}
+    let data = {id, showToastMessage, showSuccessMessage, updatePage}
     dispatch(likeProduct(data));
     setDeleteModalActive(false)
     setModalActive(false)
@@ -86,8 +86,8 @@ function MainPage() {
     setSecondModalActive(false)
   }
   useEffect(() => {
-    dispatch(getProducts(1));
-    dispatch(getInfoOfUser())
+      dispatch(getProducts(1));
+      dispatch(getInfoOfUser())
   }, []);
 
   return (

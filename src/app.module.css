@@ -31,7 +31,10 @@
   font-size: 16px;
   border:none;
 }
-
+body{
+  background-color: #F0F0F0;
+  
+}
 .container{
   max-width: 1440px;
   width: 100%;

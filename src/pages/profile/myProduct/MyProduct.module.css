@@ -29,7 +29,12 @@
     position: relative;
     z-index: 1;
 }
-
+.product_card:hover{
+    -webkit-transform: scale(1.06);
+    -ms-transform: scale(1.06);
+    cursor: pointer;
+    transform: scale(1.06);
+}
 .product_card h4 {
     font-weight: 500;
     font-size: 14px;

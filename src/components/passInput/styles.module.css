@@ -1,5 +1,5 @@
 .input{
-   border: none;
+   border-bottom: 2px dotted #C0C0C0;
    width: 250px;
    font-size: 30px;
    font-weight: bold;
@@ -9,4 +9,5 @@
    letter-spacing: 10px;
    height: 40px;
    text-align: center;
+   background-color: #F0F0F0;
 }

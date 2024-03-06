@@ -132,6 +132,7 @@ function RegisterPass() {
               value={formik.values.confirm_password}
               color={confirm && "red"}
             />
+            <p>Подтвердите пароль</p>
             {confirm && (
               <span
                 style={{ color: "red", fontSize: "15px", marginTop: "8px" }}
