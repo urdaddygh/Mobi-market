@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import ProfilePage from "./profilePage/ProfilePage";
 import { Route, Routes } from "react-router-dom";
 import s from "./Profile.module.css";
-// import NavBar from "../../components/navbar/NavBar";
 import LikedProduct from "./likedProduct/LikedProduct";
 import MyProduct from "./myProduct/MyProduct";
 import { useSelector } from "react-redux";
