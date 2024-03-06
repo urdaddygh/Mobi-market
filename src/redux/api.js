@@ -53,9 +53,10 @@ const handleUnauthorizedError = async (error) => {
   return Promise.reject(error);
 };
 
-[fetchAPI, fetchAPIImage, fetchNoTokenAPI].forEach((instance) => {
+[fetchAPI, fetchAPIImage].forEach((instance) => {
   instance.interceptors.response.use(undefined, handleUnauthorizedError);
 });
+
 export const requests = {
   authApi: (data) => fetchNoTokenAPI.post("users/login/", data),
   getRefreshToken: (data) => fetchNoTokenAPI.post("users/login/refresh/", data),
