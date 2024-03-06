@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import s from "./Profile.module.css";
-import NavBar from "../../../components/navbar/NavBar";
 import BackToPrevBtn from "../../../components/backToPrevBtn/BackToPrevBtn";
 import { Icon_for_add_img, profile_icon } from "../../../Images";
 import { useFormik } from "formik";

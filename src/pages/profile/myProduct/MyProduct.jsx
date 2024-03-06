@@ -45,7 +45,6 @@ function MyProduct() {
     const products = useSelector((state) => state.products.myProducts);
     const product = useSelector((state) => state.products.product);
     const err = useSelector((state) => state.products.getMyProductsErr);
-    console.log(product);
 
     const updatePage = ()=>{
       dispatch(getMyProducts(products.page))

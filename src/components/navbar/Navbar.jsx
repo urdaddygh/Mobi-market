@@ -7,7 +7,7 @@ import {
   profile_icon,
   vector_icon,
 } from "../../Images";
-import s from "./NavBar.module.css";
+import s from "./Navbar.module.css";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { removeCookie } from "../../utils/cookieFunction/cookieFunction";
 import { Modal } from "../modal/Modal";
@@ -17,7 +17,7 @@ import { clearStateProfile, getInfoOfUser } from "../../redux/slices/profileSlic
 import { clearStateProduct } from "../../redux/slices/productsApiSlice";
 import { clearStateAuth } from "../../redux/slices/authSlice";
 
-function NavBar({ name, username, className, first_name }) {
+export const Navbar=({ name, username, className, first_name })=> {
   const location = useLocation();
   const [active, setActive] = useState(false);
   const navigate = useNavigate();
@@ -142,5 +142,3 @@ function NavBar({ name, username, className, first_name }) {
     </div>
   );
 }
-
-export default NavBar;

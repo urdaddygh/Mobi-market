@@ -45,7 +45,6 @@ function LikedProduct() {
   const products = useSelector((state) => state.products.likedProducts);
   const product = useSelector((state) => state.products.product);
   const err = useSelector((state) => state.products.likedErr);
-  console.log(product);
 
   useEffect(() => {
     dispatch(getLikedProducts(1));
