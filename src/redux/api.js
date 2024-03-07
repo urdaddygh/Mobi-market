@@ -134,8 +134,8 @@ export const requests = {
       },
     }),
   likeProduct: (data) =>
-    fetchAPI.post(`products/like/${data}/`, {
-      headers: {
+    fetchAPI.post(`products/like/${data}/`, "", {
+      headers: { 
         Authorization: `Bearer ${getCookie("access")}`,
       },
     }),
