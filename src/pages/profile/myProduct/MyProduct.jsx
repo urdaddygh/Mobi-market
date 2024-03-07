@@ -3,14 +3,14 @@ import BackToPrevBtn from '../../../components/backToPrevBtn/BackToPrevBtn'
 import s from './MyProduct.module.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
-import { deleteProduct, getLikedProducts, getMyProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
+import { deleteProduct, getMyProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
 import { change_icon, empty_icon, heart_icon, red_heart_icon, three_dot, trash_delete_icon } from '../../../Images';
 import Skeleton from '../../../components/skeleton/Skeleton';
 import { Pagination } from '../../../components/pagination/Pagination';
-import ModalForProduct from '../../../components/modalForProduct/ModalForProduct';
 import DeleteModal from '../../../components/deleteModal/DeleteModal';
 import ModalForChangeProduct from '../../../components/modalForChangeProduct/ModalForChangeProduct';
 import { ModalForCancel } from '../../../components/modalForCancel/ModalForCancel';
+import ThreeDotModal from './ThreeDotModal';
 function MyProduct() {
 
     const [modalActive, setModalActive] = useState(false);
@@ -142,7 +142,8 @@ function MyProduct() {
                       className={s.heart}
                     />
                     <span> {el.like_count}</span>
-                    {!threeDotActive ? (
+                    <ThreeDotModal getProductForModal={getProductForModal} openDeleteModal={openDeleteModal} id={el.id}/>
+                    {/* {!threeDotActive ? (
                       <img src={three_dot} alt="" className={s.three_dot} onClick={(e)=>openThreeDot(e)}/>
                     ) : (
                       <div className={s.three_dot_active}>
@@ -153,7 +154,7 @@ function MyProduct() {
                           <img src={trash_delete_icon} alt="" /> <p>Удалить</p>
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
               ))

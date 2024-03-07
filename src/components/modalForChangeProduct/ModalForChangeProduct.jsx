@@ -62,7 +62,6 @@ const ModalForChangeProduct = ({
     },
     onSubmit: (values) => {
       let formData = new FormData();
-      console.log(filesForServer)
       filesForServer.forEach((file) => {
         formData.append("uploaded_images", file);
       });
@@ -73,10 +72,9 @@ const ModalForChangeProduct = ({
       formData.append("name", values.name);
       formData.append("short_description", values.short_description);
       formData.append("full_description", values.full_description);
-      console.log(values)
-      for (let property of formData.entries()) {
-        console.log(property[0], property[1]);
-      }
+      // for (let property of formData.entries()) {
+      //   console.log(property[0], property[1]);
+      // }
       let data = { formData, showSuccessMessage, updateProduct, id, clear };
       dispatch(changeProduct(data))
     },
@@ -84,7 +82,6 @@ const ModalForChangeProduct = ({
 
   const handleFileChange = () => {
     const files = Array.from(fileInputRef.current.files);
-    // console.log(files)
     setSelectedFiles([...selectedFiles, ...files]);
     setFilesForServer([...filesForServer, ...files])
   };

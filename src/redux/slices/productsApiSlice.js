@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { requests } from "../api";
-import axios from "axios";
-import { getCookie, setCookie } from "../../utils/cookieFunction/cookieFunction";
 
 const initialState = {
   error: false,
@@ -26,27 +24,7 @@ export const getProducts = createAsyncThunk(
     }
   }
 );
-// export const getProductsBegin = createAsyncThunk(
-//   "getProductsReducer/getProductsBegin",
-//   async (data) => {
-//     const access = getCookie("access")
-//     try {
-//       const config = {
-//         headers: {
-//           "Content-type": "application/json",
-//           Authorization: `Bearer ${access}`,
-//         },
-//       };
-//       const res = await axios.get(
-//         `https://neobook.online/mobi-market/products/?page=${data}&limit=32`,
-//         config
-//       );
-//       return res.data;
-//     } catch (err) {
-//       throw new Error(err, "errrrrrrr");
-//     }
-//   }
-// );
+
 export const getLikedProducts = createAsyncThunk(
   "getProductsReducer/getLikedProducts",
   async (data) => {
@@ -63,7 +41,6 @@ export const addProduct = createAsyncThunk(
   "getProductsReducer/addProduct",
   async (data) => {
     try {
-      console.log(data)
       const res = await requests.addProduct(data.formData);
       data.showSuccessMessage("Товар добавлен")
       data.actions.resetForm()
@@ -73,10 +50,14 @@ export const addProduct = createAsyncThunk(
     } catch (err) {
       if(err.response.status===403){
       data.showErrMessage("Подтвердите аккаунт")
-      throw new Error(console.log(err));
+      throw new Error(console.log(err.response));
       }
-      data.showErrMessage("Добавьте изображение")
-      throw new Error(console.log(err));
+      if(err.response.data.uploaded_images){
+        data.showErrMessage("Добавьте изображение")
+        throw new Error(console.log(err.response));
+      }
+      data.showErrMessage("Что то не так с интернетом...")
+      throw new Error(console.log(err.response));
     }
   }
 );
@@ -157,7 +138,6 @@ export const unLikeProduct = createAsyncThunk(
 export const changeProduct = createAsyncThunk(
   "getProductsReducer/changeProduct",
   async (data) => {
-    console.log(data.id)
     try {
       const res = await requests.changeProduct(data);
       data.showSuccessMessage("Товар изменен")
