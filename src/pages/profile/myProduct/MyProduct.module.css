@@ -27,14 +27,10 @@
     margin-bottom: 20px;
     margin-right: 15px;
     position: relative;
-    z-index: 1;
-}
-.product_card:hover{
-    -webkit-transform: scale(1.06);
-    -ms-transform: scale(1.06);
     cursor: pointer;
-    transform: scale(1.06);
+    /* z-index: 1; */
 }
+
 .product_card h4 {
     font-weight: 500;
     font-size: 14px;
@@ -59,11 +55,15 @@
 .heart_icon {
     align-items: center;
     display: flex;
+    justify-content: space-between;
 }
 .heart{
     cursor: pointer;
 }
-.three_dot{
+.delete_icon{
+    width: 20px;
+}
+/* .three_dot{
     position: absolute;
     right: 16.5px;
     bottom: 12.5px;
@@ -91,4 +91,4 @@
 }
 .box img{
     margin-right: 9px;
-}
+} */

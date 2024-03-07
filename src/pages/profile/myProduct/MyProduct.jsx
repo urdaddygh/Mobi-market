@@ -1,109 +1,119 @@
-import React, { useEffect, useState } from 'react'
-import BackToPrevBtn from '../../../components/backToPrevBtn/BackToPrevBtn'
-import s from './MyProduct.module.css'
-import { useDispatch, useSelector } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
-import { deleteProduct, getMyProducts, getProducts, getProductsById, getProductsForPagination, likeProduct, unLikeProduct } from '../../../redux/slices/productsApiSlice';
-import { change_icon, empty_icon, heart_icon, red_heart_icon, three_dot, trash_delete_icon } from '../../../Images';
-import Skeleton from '../../../components/skeleton/Skeleton';
-import { Pagination } from '../../../components/pagination/Pagination';
-import DeleteModal from '../../../components/deleteModal/DeleteModal';
-import ModalForChangeProduct from '../../../components/modalForChangeProduct/ModalForChangeProduct';
-import { ModalForCancel } from '../../../components/modalForCancel/ModalForCancel';
-import ThreeDotModal from './ThreeDotModal';
+import React, { useEffect, useState } from "react";
+import BackToPrevBtn from "../../../components/backToPrevBtn/BackToPrevBtn";
+import s from "./MyProduct.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  deleteProduct,
+  getMyProducts,
+  getProducts,
+  getProductsById,
+  getProductsForPagination,
+  likeProduct,
+  unLikeProduct,
+} from "../../../redux/slices/productsApiSlice";
+import {
+  empty_icon,
+  heart_icon,
+  red_heart_icon,
+  trash_delete_icon,
+} from "../../../Images";
+import Skeleton from "../../../components/skeleton/Skeleton";
+import { Pagination } from "../../../components/pagination/Pagination";
+import DeleteModal from "../../../components/deleteModal/DeleteModal";
+import ModalForChangeProduct from "../../../components/modalForChangeProduct/ModalForChangeProduct";
+import { ModalForCancel } from "../../../components/modalForCancel/ModalForCancel";
 function MyProduct() {
+  const [modalActive, setModalActive] = useState(false);
+  const [secondModalActive, setSecondModalActive] = useState(false);
+  const [cancelModalActive, setCancelModalActive] = useState(false);
+  const [isChanging, setIsChanging] = useState(false);
 
-    const [modalActive, setModalActive] = useState(false);
-    const [secondModalActive, setSecondModalActive] = useState(false);
-    const [cancelModalActive, setCancelModalActive] = useState(false);
-    const [isChanging, setIsChanging] = useState(false)
-    const [threeDotActive, setThreeDotActive] = useState(false)
+  const activeModal = () => {
+    setSecondModalActive(false);
+    // setModalActive(true);
+  };
+  const dispatch = useDispatch();
 
-    const activeModal =()=>{
-      setSecondModalActive(false)
-      setModalActive(true)
-    }
-    const dispatch = useDispatch();
-    
-    useEffect(() => {
-      dispatch(getMyProducts(1));
-    }, []);
-  
-    const showToastMessage = (data) => {
-      toast.error(data, {
-        position: toast.POSITION.TOP_CENTER,
-        className: "popup",
-      });
+  useEffect(() => {
+    dispatch(getMyProducts(1));
+  }, []);
+
+  const showToastMessage = (data) => {
+    toast.error(data, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
+  const showSuccessMessage = (data) => {
+    toast.success(data, {
+      position: toast.POSITION.TOP_CENTER,
+      className: "popup",
+    });
+  };
+
+  const products = useSelector((state) => state.products.myProducts);
+  const product = useSelector((state) => state.products.product);
+  const err = useSelector((state) => state.products.getMyProductsErr);
+
+  const updatePage = () => {
+    dispatch(getMyProducts(products.page));
+  };
+
+  const likeProductById = (id, e) => {
+    e.stopPropagation();
+    let data = { id, showToastMessage, showSuccessMessage, updatePage };
+    dispatch(likeProduct(data));
+  };
+
+  const unLikeProductById = (id, e) => {
+    e.stopPropagation();
+    setSecondModalActive(false);
+    let data = { id, updatePage };
+    dispatch(unLikeProduct(data));
+  };
+
+  const getProductForModal = (data) => {
+    dispatch(getProductsById(data));
+    setModalActive(true);
+  };
+
+  const openDeleteModal = (id, e) => {
+    e.stopPropagation();
+    setModalActive(false);
+    closeModal();
+    dispatch(getProductsById(id));
+    setSecondModalActive(true);
+  };
+
+  const closeModal = () => {
+    setModalActive(false);
+    setIsChanging(false);
+  };
+
+  const clickOnYes = () => {
+    setCancelModalActive(false);
+    closeModal();
+    // setSecondModalActive(false)
+  };
+  const clickOnNo = () => {
+    setCancelModalActive(false);
+  };
+
+  const updateProduct = () => {
+    dispatch(getMyProducts(products.page));
+  };
+  const deleteProductById = () => {
+    let data = {
+      showSuccessMessage,
+      id: product.id,
+      closeModal,
+      updateProduct,
     };
-    const showSuccessMessage = (data) => {
-      toast.success(data, {
-        position: toast.POSITION.TOP_CENTER,
-        className: "popup",
-      });
-    };
-  
-    const products = useSelector((state) => state.products.myProducts);
-    const product = useSelector((state) => state.products.product);
-    const err = useSelector((state) => state.products.getMyProductsErr);
+    dispatch(deleteProduct(data));
+    setSecondModalActive(false);
+  };
 
-    const updatePage = ()=>{
-      dispatch(getMyProducts(products.page))
-    }
-
-    const likeProductById = (id, e) => {
-      e.stopPropagation();
-      let data = {id, showToastMessage, showSuccessMessage, updatePage}
-      dispatch(likeProduct(data));
-    };
-
-    const unLikeProductById = (id, e) => {
-      e.stopPropagation();
-      setSecondModalActive(false)
-      let data = {id, updatePage}
-      dispatch(unLikeProduct(data));
-    };
-
-    const getProductForModal = (data) => {
-      dispatch(getProductsById(data));
-      setThreeDotActive(false)
-      setModalActive(true);
-    };
-
-    const openDeleteModal=(id, e)=>{
-      e.stopPropagation();
-      setThreeDotActive(false)
-      setModalActive(false)
-      closeModal()
-      dispatch(getProductsById(id))
-      setSecondModalActive(true)
-    }
-
-    const closeModal = ()=>{
-      setModalActive(false)
-      setIsChanging(false)
-    }
-  
-    const clickOnYes=()=>{
-      setCancelModalActive(false)
-      closeModal()
-      // setSecondModalActive(false)
-    }
-    const clickOnNo=()=>{
-      setCancelModalActive(false)
-    }
-    
-  const updateProduct=()=>{
-    dispatch(getMyProducts(products.page))
-  }
-    const deleteProductById = ()=>{
-      let data = {showSuccessMessage, id:product.id, closeModal, updateProduct}
-      dispatch(deleteProduct(data))
-      setSecondModalActive(false)
-    }
-    const openThreeDot=(e)=>{
-      e.stopPropagation();
-      setThreeDotActive(true)
-    }
 
   return (
     <>
@@ -129,32 +139,27 @@ function MyProduct() {
                   <h4>{el.name}</h4>
                   <p>{el.price}</p>
                   <div className={s.heart_icon}>
+                    <div>
+                      <img
+                        src={
+                          el.liked_by_current_user ? red_heart_icon : heart_icon
+                        }
+                        alt=""
+                        onClick={
+                          el.liked_by_current_user
+                            ? (e) => unLikeProductById(el.id, e)
+                            : (e) => likeProductById(el.id, e)
+                        }
+                        className={s.heart}
+                      />
+                      <span> {el.like_count}</span>
+                    </div>
                     <img
-                      src={
-                        el.liked_by_current_user ? red_heart_icon : heart_icon
-                      }
-                      alt=""
-                      onClick={
-                        el.liked_by_current_user
-                          ? (e) => unLikeProductById(el.id, e)
-                          : (e) => likeProductById(el.id, e)
-                      }
-                      className={s.heart}
+                      src={trash_delete_icon}
+                      alt="delete"
+                      className={s.delete_icon}
+                      onClick={(e)=>openDeleteModal(el.id,e)}
                     />
-                    <span> {el.like_count}</span>
-                    <ThreeDotModal getProductForModal={getProductForModal} openDeleteModal={openDeleteModal} id={el.id}/>
-                    {/* {!threeDotActive ? (
-                      <img src={three_dot} alt="" className={s.three_dot} onClick={(e)=>openThreeDot(e)}/>
-                    ) : (
-                      <div className={s.three_dot_active}>
-                        <div className={s.box} onClick={() => getProductForModal(el.id)}>
-                          <img src={change_icon} alt="" /> <p>Изменить</p>
-                        </div>
-                        <div className={s.box} onClick={(e)=>openDeleteModal(el.id, e)}>
-                          <img src={trash_delete_icon} alt="" /> <p>Удалить</p>
-                        </div>
-                      </div>
-                    )} */}
                   </div>
                 </div>
               ))
@@ -209,4 +214,4 @@ function MyProduct() {
   );
 }
 
-export default MyProduct
+export default MyProduct;
